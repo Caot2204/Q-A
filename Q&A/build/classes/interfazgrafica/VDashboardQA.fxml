@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="427.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfazgrafica.DashboardQAController">
+<AnchorPane id="AnchorPane" prefHeight="427.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfazgrafica.VDashboardQAController">
    <children>
       <Label layoutX="59.0" layoutY="14.0" text="%key.tusCuestionarios">
          <font>

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="interfazgrafica.PrincipalController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="interfazgrafica.VPrincipalController">
    <children>
       <Label layoutX="131.0" layoutY="43.0" text="%key.tituloJuego">
          <font>

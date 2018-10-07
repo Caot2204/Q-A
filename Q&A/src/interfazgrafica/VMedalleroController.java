@@ -14,7 +14,7 @@ import javafx.fxml.Initializable;
  *
  * @author Carlos Onorio
  */
-public class PrincipalController implements Initializable {
+public class VMedalleroController implements Initializable {
 
     /**
      * Initializes the controller class.
