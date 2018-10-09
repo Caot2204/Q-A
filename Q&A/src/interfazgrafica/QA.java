@@ -24,7 +24,7 @@ public class QA extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Locale locale = Locale.getDefault();
-        Parent root = FXMLLoader.load(getClass().getResource("Principal.fxml"), ResourceBundle.getBundle("lang.lang", locale));
+        Parent root = FXMLLoader.load(getClass().getResource("VGraficaRespuestas.fxml"), ResourceBundle.getBundle("lang.lang", locale));
         
         Scene scene = new Scene(root);
         
