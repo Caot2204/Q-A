@@ -7,7 +7,10 @@ package interfazgrafica;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import sesion.AdministradorSesionActual;
 
 /**
  * FXML Controller class
@@ -15,13 +18,17 @@ import javafx.fxml.Initializable;
  * @author Carlos Onorio
  */
 public class VDashboardQAController implements Initializable {
+    
+    @FXML
+    private Label labelNombreUsuario;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador(null);
+        labelNombreUsuario.setText(administradorSesion.obtenerSesionUsuario().getUsuario().getNombre());
+    }
+
 }

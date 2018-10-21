@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dominio.actores;
+package comunicacion.interfaz;
 
 /**
  *
  * @author Carlos Onorio
  */
-public class Usuario {
+public interface PartidaInterface {
     
 }

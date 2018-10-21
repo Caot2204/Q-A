@@ -43,6 +43,6 @@
             <Image url="@../recursos/fotoPerfilDefault.png" />
          </image>
       </ImageView>
-      <Label layoutX="619.0" layoutY="22.0" text="%key.nombreUsuarioDefault" textAlignment="RIGHT" />
+      <Label fx:id="labelNombreUsuario" layoutX="619.0" layoutY="22.0" text="%key.nombreUsuarioDefault" textAlignment="RIGHT" />
    </children>
 </AnchorPane>
