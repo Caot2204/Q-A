@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Cuestionario.findAll", query = "SELECT c FROM Cuestionario c")
     , @NamedQuery(name = "Cuestionario.findById", query = "SELECT c FROM Cuestionario c WHERE c.id = :id")
     , @NamedQuery(name = "Cuestionario.findByNombre", query = "SELECT c FROM Cuestionario c WHERE c.nombre = :nombre")
-    , @NamedQuery(name = "Cuestionario.findByCantidadPreguntas", query = "SELECT c FROM Cuestionario c WHERE c.cantidadPreguntas = :cantidadPreguntas")
     , @NamedQuery(name = "Cuestionario.findByVecesJugado", query = "SELECT c FROM Cuestionario c WHERE c.vecesJugado = :vecesJugado")
     , @NamedQuery(name = "Cuestionario.findByUltimoGanador", query = "SELECT c FROM Cuestionario c WHERE c.ultimoGanador = :ultimoGanador")})
 public class Cuestionario implements Serializable {
@@ -48,9 +47,6 @@ public class Cuestionario implements Serializable {
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @Column(name = "cantidad_preguntas")
-    private int cantidadPreguntas;
     @Basic(optional = false)
     @Column(name = "veces_jugado")
     private int vecesJugado;
@@ -69,10 +65,9 @@ public class Cuestionario implements Serializable {
         this.id = id;
     }
 
-    public Cuestionario(Long id, String nombre, int cantidadPreguntas, int vecesJugado) {
+    public Cuestionario(Long id, String nombre, int vecesJugado) {
         this.id = id;
         this.nombre = nombre;
-        this.cantidadPreguntas = cantidadPreguntas;
         this.vecesJugado = vecesJugado;
     }
 
@@ -90,14 +85,6 @@ public class Cuestionario implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public int getCantidadPreguntas() {
-        return cantidadPreguntas;
-    }
-
-    public void setCantidadPreguntas(int cantidadPreguntas) {
-        this.cantidadPreguntas = cantidadPreguntas;
     }
 
     public int getVecesJugado() {

@@ -21,10 +21,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sesion.AdministradorSesionActual;
-import sesion.SesionUsuario;
 
 /**
  * FXML Controller class
@@ -37,7 +37,7 @@ public class VIniciarSesionController implements Initializable {
     private TextField textFieldNombreUsuario;
 
     @FXML
-    private TextField textFieldContrasenia;
+    private PasswordField passwordFieldContrasenia;
     
     private String usuario;
     private String contrasenia;
@@ -56,7 +56,8 @@ public class VIniciarSesionController implements Initializable {
             try {
                 Registry registro = LocateRegistry.getRegistry();
                 CuentaUsuarioInterface stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
-                AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador(stub.iniciarSesion(usuario, contrasenia));
+                AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
+                administradorSesion.setSesionUsuario(stub.iniciarSesion(usuario, contrasenia));
                 mostrarVentana("Dashboard", "VDashboardQA.fxml");
             } catch (RemoteException | NotBoundException ex) {
                 Logger.getLogger(VIniciarSesionController.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,13 +70,13 @@ public class VIniciarSesionController implements Initializable {
     private boolean validarCampos() {
         boolean camposValidos = true;
         usuario = textFieldNombreUsuario.getText();
-        contrasenia = textFieldContrasenia.getText();
+        contrasenia = passwordFieldContrasenia.getText();
         
         if (usuario == null || usuario.isEmpty() || usuario.length() >= 150) {
             textFieldNombreUsuario.requestFocus();
             camposValidos = false;
         } else if (contrasenia == null || contrasenia.isEmpty() || contrasenia.length() >= 150) {
-            textFieldContrasenia.requestFocus();
+            passwordFieldContrasenia.requestFocus();
             camposValidos = false;
         }
         
@@ -97,7 +98,7 @@ public class VIniciarSesionController implements Initializable {
             escenario.setScene(scene);
             escenario.show();
             
-            Stage escenarioActual = (Stage) textFieldContrasenia.getScene().getWindow();
+            Stage escenarioActual = (Stage) passwordFieldContrasenia.getScene().getWindow();
             escenarioActual.close();
         } catch (IOException ex) {
             Logger.getLogger(VIniciarSesionController.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,10 +5,17 @@
  */
 package comunicacion.interfaz;
 
+import dominio.cuestionario.CuestionarioCliente;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Carlos Onorio
  */
-public interface CuestionarioInterface {
-    
+public interface CuestionarioInterface extends Remote{
+    public boolean guardarCuestionario(CuestionarioCliente cuestionario) throws RemoteException;
+    public CuestionarioCliente recuperarCuestionario(long id) throws RemoteException;
+    public boolean editarCuestionario(CuestionarioCliente cuestionario) throws RemoteException;
+    public boolean eliminarCuestionario(long id) throws RemoteException; 
 }

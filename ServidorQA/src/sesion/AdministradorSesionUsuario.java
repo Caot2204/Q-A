@@ -26,7 +26,7 @@ public class AdministradorSesionUsuario {
     private Usuario usuario;
 
     /**
-     * 
+     *
      * @return Instancia del AdministradorSesionUsuario
      */
     public static AdministradorSesionUsuario obtenerInstancia() {
@@ -35,10 +35,10 @@ public class AdministradorSesionUsuario {
         }
         return administradorSesiones;
     }
-    
+
     private AdministradorSesionUsuario() {
         this.fabricaEntityManager = Persistence.createEntityManagerFactory("ServidorQAPU");
-        this.controladorUsuario = UsuarioJpaController.obtenerInstancia(fabricaEntityManager);        
+        this.controladorUsuario = new UsuarioJpaController(fabricaEntityManager);
         this.sesionesActuales = new ArrayList<>();
     }
 
@@ -52,9 +52,9 @@ public class AdministradorSesionUsuario {
      */
     public boolean iniciarSesion(String nombre, String contrasenia) {
         boolean autenticado = false;
-        
+
         usuario = controladorUsuario.findUsuario(nombre);
-        
+
         if (usuario != null) {
             if (contrasenia.equals(usuario.getPassword())) {
                 Date fechaActual = new Date();
@@ -62,29 +62,65 @@ public class AdministradorSesionUsuario {
                 usuarioCliente.setNombre(usuario.getNombre());
                 usuarioCliente.setCorreo(usuario.getCorreo());
                 usuarioCliente.setFotoPerfil(usuario.getFotoPerfil());
-                
+
                 SesionUsuario sesion = new SesionUsuario(fechaActual, usuarioCliente);
                 sesionesActuales.add(sesion);
                 autenticado = true;
-            }            
+            }
         }
 
         return autenticado;
     }
-    
+
     /**
-     * Busca entre las sesiones iniciadas en el sistema una sesión en particular y la devuelve
+     * Elimina la sesión actual de un usuario en el sistema
+     *
+     * @param nombre Identificador de la sesión a eliminar
+     * @return True si la sesión se eliminó, False si no fue así
+     */
+    public boolean cerrarSesion(String nombre) {
+        boolean sesionCerrada = false;
+
+        if (validarCadena(nombre, 150)) {
+            SesionUsuario sesionACerrar = obtenerDatosSesionUsuario(nombre);
+            sesionesActuales.remove(sesionACerrar);
+            sesionCerrada = true;
+        }
+
+        return sesionCerrada;
+    }
+
+    /**
+     * Busca entre las sesiones iniciadas en el sistema una sesión en particular
+     * y la devuelve
+     *
      * @param nombre Identificador de la sesión a buscar
      * @return Sesion de usuario actual en el sistema
      */
     public SesionUsuario obtenerDatosSesionUsuario(String nombre) {
         SesionUsuario sesion = null;
-        for (SesionUsuario sesionActual: sesionesActuales) {
+        for (SesionUsuario sesionActual : sesionesActuales) {
             if (nombre.equals(sesionActual.getUsuario().getNombre())) {
                 sesion = sesionActual;
                 break;
             }
         }
-        return sesion;        
+        return sesion;
+    }
+
+    /**
+     * Valida que una cadena no sea nula, no esté vacía y no sobrepase la
+     * cantidad máxima de caracteres validos para la cadena
+     *
+     * @param cadena Cadena de caracteres a validar
+     * @param longitudMaxima Longitud máxima de caracteres permitida
+     * @return True si la cadena es valida, false si no lo es
+     */
+    private boolean validarCadena(String cadena, int longitudMaxima) {
+        boolean camposValidos = false;
+        if (cadena != null && !cadena.isEmpty() && cadena.length() <= longitudMaxima) {
+            camposValidos = true;
+        }
+        return camposValidos;
     }
 }

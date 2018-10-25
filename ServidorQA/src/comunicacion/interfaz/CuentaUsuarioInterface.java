@@ -19,5 +19,6 @@ public interface CuentaUsuarioInterface extends Remote{
     public boolean crearUsuario(String nombre, String contrasenia, String correo, File fotoPerfil) throws RemoteException;
     public boolean editarUsuario(String nombre, String contrasenia, String correo, File fotoPerfil) throws RemoteException;
     public SesionUsuario iniciarSesion(String nombre, String contrasenia) throws RemoteException;
+    public boolean cerrarSesion(String nombre) throws RemoteException;
         
 }

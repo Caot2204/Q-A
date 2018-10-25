@@ -33,16 +33,17 @@
             <Image url="@../recursos/iconoPreguntasYRespuestas.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="740.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../recursos/logout.png" />
-         </image>
-      </ImageView>
       <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="706.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/fotoPerfilDefault.png" />
          </image>
       </ImageView>
-      <Label fx:id="labelNombreUsuario" layoutX="619.0" layoutY="22.0" text="%key.nombreUsuarioDefault" textAlignment="RIGHT" />
+      <Label fx:id="labelNombreUsuario" layoutX="299.0" layoutY="22.0" prefHeight="17.0" prefWidth="407.0" text="%key.nombreUsuarioDefault" textAlignment="RIGHT" />
+      <MenuButton layoutX="733.0" layoutY="18.0" mnemonicParsing="false">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#editarCuentaUsuario" text="%key.editarCuenta" />
+          <MenuItem mnemonicParsing="false" onAction="#cerrarSesion" text="%key.cerrarSesion" />
+        </items>
+      </MenuButton>
    </children>
 </AnchorPane>

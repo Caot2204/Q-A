@@ -10,7 +10,6 @@ CREATE TABLE usuario (
 CREATE TABLE cuestionario(
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	nombre VARCHAR(150) NOT NULL,
-	cantidad_preguntas INT NOT NULL,
 	veces_jugado INT NOT NULL,
 	ultimo_ganador VARCHAR(150),
 	autor VARCHAR(150) NOT NULL,

@@ -26,18 +26,10 @@ import javax.persistence.EntityManagerFactory;
  * @author Carlos Onorio
  */
 public class UsuarioJpaController implements Serializable {
-    
-    private static UsuarioJpaController controladorUsuario;
-    private EntityManagerFactory emf = null;
-    
-    public static UsuarioJpaController obtenerInstancia(EntityManagerFactory emf) {
-        if (controladorUsuario == null) {
-            controladorUsuario = new UsuarioJpaController(emf);            
-        }
-        return controladorUsuario;
-    }
 
-    private UsuarioJpaController(EntityManagerFactory emf) {
+    private EntityManagerFactory emf = null;
+
+    public UsuarioJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
@@ -215,5 +207,5 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

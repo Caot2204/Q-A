@@ -12,26 +12,35 @@ package sesion;
 public class AdministradorSesionActual {
 
     private static AdministradorSesionActual administradorSesion;
-    private final SesionUsuario sesion;
+    private SesionUsuario sesionUsuario;
 
     /**
-     * Establece la sesión de usuario iniciada en el sistema cliente
-     * @param sesion
+     * Obtiene una instancia de AdministradorSesionActual para manipular la 
+     * sesión iniciada en el cliente
+     * 
      * @return Administrador de la sesión actual para obtener los datos de esta
      */
-    public static AdministradorSesionActual obtenerAdministrador(SesionUsuario sesion) {
+    public static AdministradorSesionActual obtenerAdministrador() {
         if (administradorSesion == null) {
-            administradorSesion = new AdministradorSesionActual(sesion);
+            administradorSesion = new AdministradorSesionActual();
         }
         return administradorSesion;
     }
 
-    private AdministradorSesionActual(SesionUsuario sesion) {
-        this.sesion = sesion;
+    private AdministradorSesionActual() {
+        
     }
 
-    public SesionUsuario obtenerSesionUsuario() {
-        return sesion;
+    public void setSesionUsuario(SesionUsuario sesionUsuario) {
+        this.sesionUsuario = sesionUsuario;
+    }
+
+    public SesionUsuario getSesionUsuario() {
+        return sesionUsuario;
+    }
+    
+    public void removerSesionActual() {
+        this.sesionUsuario = null;
     }
 
 }

@@ -7,19 +7,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="192.0" prefWidth="281.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="interfazgrafica.VIniciarSesionController">
+<AnchorPane id="AnchorPane" prefHeight="192.0" prefWidth="281.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfazgrafica.VIniciarSesionController">
    <children>
       <TextField fx:id="textFieldNombreUsuario" layoutX="14.0" layoutY="27.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.NombreUsuario">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <TextField fx:id="textFieldContrasenia" layoutX="14.0" layoutY="82.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.contrasenia">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
       <Button layoutX="84.0" layoutY="139.0" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="39.0" prefWidth="113.0" text="%key.iniciarSesion" />
+      <PasswordField fx:id="passwordFieldContrasenia" layoutX="14.0" layoutY="78.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.contrasenia" />
    </children>
 </AnchorPane>
