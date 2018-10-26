@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import utileria.UtileriaCadena;
 
 /**
  *
@@ -56,16 +57,19 @@ public class AdministradorSesionUsuario {
         usuario = controladorUsuario.findUsuario(nombre);
 
         if (usuario != null) {
-            if (contrasenia.equals(usuario.getPassword())) {
-                Date fechaActual = new Date();
-                UsuarioCliente usuarioCliente = new UsuarioCliente();
-                usuarioCliente.setNombre(usuario.getNombre());
-                usuarioCliente.setCorreo(usuario.getCorreo());
-                usuarioCliente.setFotoPerfil(usuario.getFotoPerfil());
+            if (nombre.equals(usuario.getNombre())) {
+                if (contrasenia.equals(usuario.getPassword())) {
+                    Date fechaActual = new Date();
+                    UsuarioCliente usuarioCliente = new UsuarioCliente();
+                    usuarioCliente.setNombre(usuario.getNombre());
+                    usuarioCliente.setCorreo(usuario.getCorreo());
+                    usuarioCliente.setContrasenia(usuario.getPassword());
+                    usuarioCliente.setFotoPerfil(usuario.getFotoPerfil());
 
-                SesionUsuario sesion = new SesionUsuario(fechaActual, usuarioCliente);
-                sesionesActuales.add(sesion);
-                autenticado = true;
+                    SesionUsuario sesion = new SesionUsuario(fechaActual, usuarioCliente);
+                    sesionesActuales.add(sesion);
+                    autenticado = true;
+                }
             }
         }
 
@@ -81,7 +85,7 @@ public class AdministradorSesionUsuario {
     public boolean cerrarSesion(String nombre) {
         boolean sesionCerrada = false;
 
-        if (validarCadena(nombre, 150)) {
+        if (UtileriaCadena.validarCadena(nombre, 1, 150)) {
             SesionUsuario sesionACerrar = obtenerDatosSesionUsuario(nombre);
             sesionesActuales.remove(sesionACerrar);
             sesionCerrada = true;
@@ -108,19 +112,4 @@ public class AdministradorSesionUsuario {
         return sesion;
     }
 
-    /**
-     * Valida que una cadena no sea nula, no esté vacía y no sobrepase la
-     * cantidad máxima de caracteres validos para la cadena
-     *
-     * @param cadena Cadena de caracteres a validar
-     * @param longitudMaxima Longitud máxima de caracteres permitida
-     * @return True si la cadena es valida, false si no lo es
-     */
-    private boolean validarCadena(String cadena, int longitudMaxima) {
-        boolean camposValidos = false;
-        if (cadena != null && !cadena.isEmpty() && cadena.length() <= longitudMaxima) {
-            camposValidos = true;
-        }
-        return camposValidos;
-    }
 }

@@ -6,28 +6,24 @@
 package interfazgrafica;
 
 import comunicacion.interfaz.CuentaUsuarioInterface;
-import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import sesion.AdministradorSesionActual;
+import utileria.UtileriaCadena;
+import utileria.UtileriaInterfazUsuario;
 
 /**
- * FXML Controller class
+ * Controlador FXML de la IU VIniciarSesion
  *
  * @author Carlos Onorio
  */
@@ -41,15 +37,19 @@ public class VIniciarSesionController implements Initializable {
     
     private String usuario;
     private String contrasenia;
+    private ResourceBundle recurso;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        recurso = rb;
     }
 
+    /**
+     * Permite al cliente iniciar sesión y desplegar el Dashboard de cuenta iniciada
+     */
     @FXML
     public void iniciarSesion() {
         if (validarCampos()) {
@@ -58,51 +58,51 @@ public class VIniciarSesionController implements Initializable {
                 CuentaUsuarioInterface stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
                 AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
                 administradorSesion.setSesionUsuario(stub.iniciarSesion(usuario, contrasenia));
-                mostrarVentana("Dashboard", "VDashboardQA.fxml");
+                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard", "VDashboardQA.fxml", textFieldNombreUsuario);
             } catch (RemoteException | NotBoundException ex) {
                 Logger.getLogger(VIniciarSesionController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException excepcion) {
-                System.out.println(excepcion.getMessage());
+                UtileriaInterfazUsuario.mostrarMensajeError("key.falloInicioSesion", "key.credencialesInvalidas", "key.usuarioContraseniaIncorrectos");
             }
         }        
     }
     
+    /**
+     * Valida que los campos de la IU Iniciar sesión hayan sido ingresados correctamente
+     * 
+     * @return True si los campos fueron llenados correctamente, False si no fué así
+     */
     private boolean validarCampos() {
         boolean camposValidos = true;
         usuario = textFieldNombreUsuario.getText();
         contrasenia = passwordFieldContrasenia.getText();
         
-        if (usuario == null || usuario.isEmpty() || usuario.length() >= 150) {
+        try {
+            UtileriaCadena.validarCadena(usuario, 1, 150);
+        } catch (IllegalArgumentException excepcion) {
+            if (excepcion.getMessage().equals("Longitud invalida")) {
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueNombreUsuario", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
+            } else {
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueNombreUsuario", excepcion.getMessage());
+            }
             textFieldNombreUsuario.requestFocus();
-            camposValidos = false;
-        } else if (contrasenia == null || contrasenia.isEmpty() || contrasenia.length() >= 150) {
+            textFieldNombreUsuario.requestFocus();
+            camposValidos = false;            
+        }
+        
+        try {
+            UtileriaCadena.validarCadena(contrasenia, 1, 100);
+        } catch (IllegalArgumentException excepcion) {
+            if (excepcion.getMessage().equals("Longitud invalida")) {
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueContrasenia", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
+            } else {
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueContrasenia", excepcion.getMessage());
+            }
             passwordFieldContrasenia.requestFocus();
-            camposValidos = false;
+            camposValidos = false;            
         }
         
         return camposValidos;
-    }
-    
-    /**
-     * Cierra la IU actual y despliega la IU especificada en los parámetros
-     *
-     * @param titulo Titulo de la ventana
-     * @param nombreFXML Nombre del archivo .fxml
-     */
-    public void mostrarVentana(String titulo, String nombreFXML) {
-        Locale locale = Locale.getDefault();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(nombreFXML), ResourceBundle.getBundle("lang.lang", locale));
-            Stage escenario = new Stage();
-            Scene scene = new Scene(root);
-            escenario.setScene(scene);
-            escenario.show();
-            
-            Stage escenarioActual = (Stage) passwordFieldContrasenia.getScene().getWindow();
-            escenarioActual.close();
-        } catch (IOException ex) {
-            Logger.getLogger(VIniciarSesionController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
 }

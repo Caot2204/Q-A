@@ -8,32 +8,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="417.0" prefWidth="356.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="interfazgrafica.VRgistrarUsuarioController">
+<AnchorPane id="AnchorPane" prefHeight="451.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfazgrafica.VRgistrarUsuarioController">
    <children>
-      <Button layoutX="28.0" layoutY="364.0" mnemonicParsing="false" text="%key.unspecified" />
-      <Button layoutX="218.0" layoutY="364.0" mnemonicParsing="false" text="%key.unspecified" />
-      <TextField layoutX="77.0" layoutY="151.0" prefHeight="32.0" prefWidth="263.0" />
-      <TextField layoutX="77.0" layoutY="214.0" prefHeight="32.0" prefWidth="263.0" />
-      <TextField layoutX="77.0" layoutY="285.0" prefHeight="32.0" prefWidth="263.0" />
-      <Label layoutX="77.0" layoutY="125.0" text="%key.unspecified" />
-      <Label layoutX="91.0" layoutY="195.0" text="%key.unspecified" />
-      <Label layoutX="90.0" layoutY="263.0" text="%key." />
-      <ImageView fitHeight="42.0" fitWidth="36.0" layoutX="27.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true">
+      <Button layoutX="17.0" layoutY="401.0" mnemonicParsing="false" onAction="#cancelarRegistro" prefHeight="25.0" prefWidth="132.0" text="%key.cancelar" />
+      <Button layoutX="209.0" layoutY="401.0" mnemonicParsing="false" onAction="#finalizarRegistro" prefHeight="25.0" prefWidth="132.0" text="%key.finalizarRegistro" />
+      <TextField fx:id="textFieldNombreUsuario" layoutX="77.0" layoutY="188.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.nombreUsuario" />
+      <TextField fx:id="textFieldCorreo" layoutX="77.0" layoutY="251.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.correoElectronico" />
+      <TextField fx:id="textFieldContrasenia" layoutX="77.0" layoutY="322.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.contrasenia" />
+      <ImageView fitHeight="42.0" fitWidth="36.0" layoutX="27.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/ic-username_97587.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="27.0" layoutY="212.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="27.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/correo.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="40.0" fitWidth="57.0" layoutX="17.0" layoutY="285.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="40.0" fitWidth="57.0" layoutX="17.0" layoutY="322.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/contraseña.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="63.0" layoutY="49.0" prefHeight="25.0" prefWidth="186.0" text="%key.unspecified" />
+      <Button layoutX="116.0" layoutY="139.0" mnemonicParsing="false" onAction="#subirFotoPerfil" prefHeight="25.0" prefWidth="125.0" text="%key.subirFotoPerfil" />
+      <ImageView fx:id="imageViewFotoPerfil" fitHeight="113.0" fitWidth="125.0" layoutX="116.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

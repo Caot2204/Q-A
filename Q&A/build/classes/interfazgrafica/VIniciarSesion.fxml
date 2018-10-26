@@ -9,7 +9,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="192.0" prefWidth="281.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfazgrafica.VIniciarSesionController">
    <children>
-      <TextField fx:id="textFieldNombreUsuario" layoutX="14.0" layoutY="27.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.NombreUsuario">
+      <TextField fx:id="textFieldNombreUsuario" layoutX="14.0" layoutY="27.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.nombreUsuario">
          <font>
             <Font size="14.0" />
          </font>

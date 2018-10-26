@@ -15,6 +15,7 @@ public class UsuarioCliente implements Serializable {
     
     private String nombre;
     private String correo;
+    private String contrasenia;
     private byte[] fotoPerfil;
 
     public UsuarioCliente() {
@@ -35,6 +36,14 @@ public class UsuarioCliente implements Serializable {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+    
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 
     public byte[] getFotoPerfil() {

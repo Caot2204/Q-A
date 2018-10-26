@@ -6,6 +6,10 @@
 package interfazgrafica;
 
 import comunicacion.interfaz.CuentaUsuarioInterface;
+import dominio.actores.UsuarioCliente;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
@@ -22,8 +26,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import sesion.AdministradorSesionActual;
+import sesion.SesionUsuario;
 
 /**
  * FXML Controller class
@@ -31,10 +38,13 @@ import sesion.AdministradorSesionActual;
  * @author Carlos Onorio
  */
 public class VDashboardQAController implements Initializable {
-    
+
     @FXML
     private Label labelNombreUsuario;
-    
+
+    @FXML
+    private ImageView imageViewFotoPerfil;
+
     private AdministradorSesionActual administradorSesion;
     private CuentaUsuarioInterface stub;
 
@@ -50,14 +60,30 @@ public class VDashboardQAController implements Initializable {
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        labelNombreUsuario.setText(administradorSesion.getSesionUsuario().getUsuario().getNombre());
+
+        UsuarioCliente usuarioActual = administradorSesion.getSesionUsuario().getUsuario();
+        Image fotoPerfil;
+
+        labelNombreUsuario.setText(usuarioActual.getNombre());
+        /*if (usuarioActual.getFotoPerfil() != null) {
+            try {
+                File file = File.createTempFile("fto", ".tmp");
+                FileOutputStream stream = new FileOutputStream(file.getAbsolutePath());
+                stream.write(usuarioActual.getFotoPerfil());
+                stream.close();
+                fotoPerfil = new Image("file:" + file.getAbsolutePath());
+                imageViewFotoPerfil.setImage(fotoPerfil);
+            } catch (IOException ex) {
+                Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }*/
+
     }
-    
+
     public void editarCuentaUsuario() {
-        
+
     }
-    
+
     public void cerrarSesion() {
         try {
             if (stub.cerrarSesion(administradorSesion.getSesionUsuario().getUsuario().getNombre())) {
@@ -68,7 +94,7 @@ public class VDashboardQAController implements Initializable {
             Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Cierra la IU actual y despliega la IU especificada en los parámetros
      *
@@ -83,7 +109,7 @@ public class VDashboardQAController implements Initializable {
             Scene scene = new Scene(root);
             escenario.setScene(scene);
             escenario.show();
-            
+
             Stage escenarioActual = (Stage) labelNombreUsuario.getScene().getWindow();
             escenarioActual.close();
         } catch (IOException ex) {

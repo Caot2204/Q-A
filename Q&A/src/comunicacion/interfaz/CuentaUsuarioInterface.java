@@ -5,7 +5,7 @@
  */
 package comunicacion.interfaz;
 
-import java.io.File;
+import dominio.actores.UsuarioCliente;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import sesion.SesionUsuario;
@@ -15,10 +15,8 @@ import sesion.SesionUsuario;
  * @author Carlos Onorio
  */
 public interface CuentaUsuarioInterface extends Remote{
-    
-    public boolean crearUsuario(String nombre, String contrasenia, String correo, File fotoPerfil) throws RemoteException;
-    public boolean editarUsuario(String nombre, String contrasenia, String correo, File fotoPerfil) throws RemoteException;
+    public boolean guardarUsuario(UsuarioCliente usuario) throws RemoteException;
+    public boolean editarUsuario(UsuarioCliente usuario) throws RemoteException;
     public SesionUsuario iniciarSesion(String nombre, String contrasenia) throws RemoteException;
     public boolean cerrarSesion(String nombre) throws RemoteException;
-        
 }

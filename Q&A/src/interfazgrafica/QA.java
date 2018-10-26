@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import utileria.UtileriaInterfazUsuario;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,13 +24,7 @@ public class QA extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Locale locale = Locale.getDefault();
-        Parent root = FXMLLoader.load(getClass().getResource("VPrincipal.fxml"), ResourceBundle.getBundle("lang.lang", locale));
-        
-        Scene scene = new Scene(root);
-        
-        stage.setScene(scene);
-        stage.show();
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal", "VPrincipal.fxml", null);
     }
 
     /**

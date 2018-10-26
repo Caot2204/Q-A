@@ -33,7 +33,7 @@
             <Image url="@../recursos/iconoPreguntasYRespuestas.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="706.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imageViewFotoPerfil" fitHeight="25.0" fitWidth="31.0" layoutX="706.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/fotoPerfilDefault.png" />
          </image>
