@@ -1,12 +1,7 @@
 package interfazgrafica;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utileria.UtileriaInterfazUsuario;
 

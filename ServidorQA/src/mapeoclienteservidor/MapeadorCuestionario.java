@@ -5,40 +5,66 @@
  */
 package mapeoclienteservidor;
 
+import accesoadatos.controller.CuestionarioJpaController;
 import accesoadatos.entity.Cuestionario;
+import accesoadatos.controller.UsuarioJpaController;
+import accesoadatos.entity.Pregunta;
 import dominio.cuestionario.CuestionarioCliente;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
- * Convierte un objeto CuestionarioCliente proveniente desde el cliente a un entidad Cuestionario
- * en el servidor
- * 
- * @version 1.0 23 Oct 2018
+ * Clase encargada de convertir un Cuestionario que viene del cliente a una entidad
+ * Cuestionario que puede ser almacenada en la base de datos
+ *
+ * @version 1.0 26 Oct 2018
  * @author Carlos Onorio
  */
 public class MapeadorCuestionario {
     
+    /**
+     * Convierte un CuestionarioCliente proveniente del cliente a una entidad Respuesta
+     * en el servidor
+     * 
+     * @param cuestionarioCliente Cuestionario que proviene desde el cliente
+     * @return Entidad JPA Cuestionario
+     */
     public static Cuestionario mapearCuestionario(CuestionarioCliente cuestionarioCliente) {
         Cuestionario cuestionarioEntity = new Cuestionario();
+        EntityManagerFactory fabricaEntityManager = Persistence.createEntityManagerFactory("ServidorQAPU");
+        UsuarioJpaController controladorUsuario = new UsuarioJpaController(fabricaEntityManager);
         
-        
+        cuestionarioEntity.setNombre(cuestionarioCliente.getNombre());
+        cuestionarioEntity.setVecesJugado(cuestionarioCliente.getVecesJugado());
+        cuestionarioEntity.setUltimoGanador(cuestionarioCliente.getUltimoGanador());
+        cuestionarioEntity.setAutor(controladorUsuario.findUsuario(cuestionarioCliente.getAutor()));
         
         return cuestionarioEntity;
     }
     
     /**
-     * Valida que una cadena no sea nula, no esté vacía y no sobrepase la cantidad máxima de 
-     * caracteres validos para la cadena
+     * Genera un CuestionarioCliente con los datos de las entidades JPA Cuestionario, Pregunta
+     * y Respuesta recuperadas de la base de datos
      * 
-     * @param cadena Cadena de caracteres a validar
-     * @param longitudMaxima Longitud máxima de caracteres permitida
-     * @return True si la cadena es valida, false si no lo es
+     * @param controladorCuestionario CuestionarioJpaController para recuperar información de la base de datos
+     * @param cuestionario Entidad JPA Cuestionario a mapear
+     * @return CuestionarioCliente compatible con el cliente del servidor
      */
-    private boolean validarCadena(String cadena, int longitudMaxima) {
-        boolean camposValidos = false;
-        if (cadena != null && !cadena.isEmpty() && cadena.length() <= longitudMaxima) {
-            camposValidos = true;
-        }
-        return camposValidos;
+    public static CuestionarioCliente mapearACuestionarioCliente(CuestionarioJpaController controladorCuestionario, Cuestionario cuestionario) {
+        CuestionarioCliente cuestionarioCliente = new CuestionarioCliente();
+        long idCuestionario = cuestionario.getId();
+        
+        cuestionarioCliente.setNombre(cuestionario.getNombre());
+        cuestionarioCliente.setVecesJugado(cuestionario.getVecesJugado());
+        cuestionarioCliente.setUltimoGanador(cuestionario.getUltimoGanador());
+        cuestionarioCliente.setAutor(cuestionario.getAutor().getNombre());
+        
+        List<Pregunta> preguntasEntity = controladorCuestionario.getControladorPregunta().getPreguntasDeCuestionario(idCuestionario);
+        cuestionarioCliente.setPreguntas(MapeadorPregunta.mapearAPreguntasCliente(idCuestionario, 
+                                         preguntasEntity, controladorCuestionario.getControladorRespuesta()));
+        
+        return cuestionarioCliente;
     }
     
 }

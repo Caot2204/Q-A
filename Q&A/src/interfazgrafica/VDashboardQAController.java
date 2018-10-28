@@ -6,31 +6,41 @@
 package interfazgrafica;
 
 import comunicacion.interfaz.CuentaUsuarioInterface;
+import comunicacion.interfaz.CuestionarioInterface;
 import dominio.actores.UsuarioCliente;
+import dominio.cuestionario.CuestionarioCliente;
+import interfazgrafica.adaptadortableview.AdaptadorCuestionario;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import sesion.AdministradorSesionActual;
-import sesion.SesionUsuario;
+import utileria.UtileriaInterfazUsuario;
 
 /**
  * FXML Controller class
@@ -44,9 +54,27 @@ public class VDashboardQAController implements Initializable {
 
     @FXML
     private ImageView imageViewFotoPerfil;
+    
+    @FXML
+    private TableView tableViewCuestionarios;
+    
+    @FXML
+    private TableColumn tableColumnNombreCuestionario;
+    
+    @FXML
+    private TableColumn tableColumnCantidadPreguntas;
+    
+    @FXML
+    private TableColumn tableColumnVecesJugado;
+    
+    @FXML
+    private TableColumn tableColumnUltimoGanador;
 
     private AdministradorSesionActual administradorSesion;
-    private CuentaUsuarioInterface stub;
+    private CuentaUsuarioInterface stubCuentaUsuario;
+    private CuestionarioInterface stubCuestionario;
+    private ArrayList<CuestionarioCliente> cuestionariosRegistrados;
+    private ObservableList<AdaptadorCuestionario> cuestionariosParaTableView;
 
     /**
      * Initializes the controller class.
@@ -56,7 +84,8 @@ public class VDashboardQAController implements Initializable {
         administradorSesion = AdministradorSesionActual.obtenerAdministrador();
         try {
             Registry registro = LocateRegistry.getRegistry();
-            stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
+            stubCuentaUsuario = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
+            stubCuestionario = (CuestionarioInterface) registro.lookup("servidorCuestionarios");
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -78,6 +107,7 @@ public class VDashboardQAController implements Initializable {
             }
         }*/
 
+        mostrarCuestionarios();
     }
 
     public void editarCuentaUsuario() {
@@ -86,12 +116,13 @@ public class VDashboardQAController implements Initializable {
 
     public void cerrarSesion() {
         try {
-            if (stub.cerrarSesion(administradorSesion.getSesionUsuario().getUsuario().getNombre())) {
+            if (stubCuentaUsuario.cerrarSesion(administradorSesion.getSesionUsuario().getUsuario().getNombre())) {
                 administradorSesion.removerSesionActual();
                 mostrarVentana("Principal", "VPrincipal.fxml");
             }
         } catch (RemoteException ex) {
             Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+            UtileriaInterfazUsuario.mostrarMensajeError("key.errorDeConexion", "key.errorAlConectar", "key.problemaConexion");
         }
     }
 
@@ -114,6 +145,31 @@ public class VDashboardQAController implements Initializable {
             escenarioActual.close();
         } catch (IOException ex) {
             Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void mostrarCuestionarios() {
+        tableColumnNombreCuestionario.setCellValueFactory(new PropertyValueFactory<AdaptadorCuestionario,String>("nombreCuestionario"));
+        tableColumnCantidadPreguntas.setCellValueFactory(new PropertyValueFactory<AdaptadorCuestionario,String>("cantidadPreguntas"));
+        tableColumnVecesJugado.setCellValueFactory(new PropertyValueFactory<AdaptadorCuestionario,String>("vecesJugado"));
+        tableColumnUltimoGanador.setCellValueFactory(new PropertyValueFactory<AdaptadorCuestionario,String>("ultimoGanador"));
+        cuestionariosParaTableView = FXCollections.observableArrayList();
+        String nombreUsuario = administradorSesion.getSesionUsuario().getUsuario().getNombre();
+        
+        try {
+            cuestionariosRegistrados = stubCuestionario.recuperarCuestionariosPorAutor(nombreUsuario);
+            for (CuestionarioCliente cuestionario : cuestionariosRegistrados) {
+                AdaptadorCuestionario adaptador = new AdaptadorCuestionario();
+                adaptador.setNombreCuestionario(cuestionario.getNombre());
+                adaptador.setCantidadPreguntas(cuestionario.getPreguntas().size());
+                adaptador.setVecesJugado(cuestionario.getVecesJugado());
+                adaptador.setUltimoGanador(cuestionario.getUltimoGanador());
+                cuestionariosParaTableView.add(adaptador);
+            }
+            tableViewCuestionarios.setItems(cuestionariosParaTableView);
+        } catch (RemoteException ex) {
+            Logger.getLogger(VDashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+            UtileriaInterfazUsuario.mostrarMensajeError("key.errorDeConexion", "key.errorAlConectar", "key.problemaConexion");
         }
     }
 

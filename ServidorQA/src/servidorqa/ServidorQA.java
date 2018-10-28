@@ -6,7 +6,9 @@
 package servidorqa;
 
 import comunicacion.interfaz.CuentaUsuarioInterface;
+import comunicacion.interfaz.CuestionarioInterface;
 import comunicacion.servidor.ServidorCuentaUsuario;
+import comunicacion.servidor.ServidorCuestionario;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
@@ -28,11 +30,15 @@ public class ServidorQA {
      */
     public static void main(String[] args) {
         ServidorCuentaUsuario servidorCuentas = new ServidorCuentaUsuario();
+        ServidorCuestionario servidorCuestionario = new ServidorCuestionario();
         try {
-            CuentaUsuarioInterface stub = (CuentaUsuarioInterface) UnicastRemoteObject.exportObject(servidorCuentas, 0);
+            CuentaUsuarioInterface stubCuentaUsuario = (CuentaUsuarioInterface) UnicastRemoteObject.exportObject(servidorCuentas, 0);
+            CuestionarioInterface stubCuestionario = (CuestionarioInterface) UnicastRemoteObject.exportObject(servidorCuestionario, 0);
             Registry registro = LocateRegistry.getRegistry();
-            registro.bind("servidorCuentasUsuario", stub);
+            registro.bind("servidorCuentasUsuario", stubCuentaUsuario);
+            registro.bind("servidorCuestionarios", stubCuestionario);
             System.out.println("ServidorCuentasUsuario escuchando....");
+            System.out.println("ServidorCuestionarios escuchando....");
         } catch (RemoteException | AlreadyBoundException ex) {
             Logger.getLogger(ServidorQA.class.getName()).log(Level.SEVERE, null, ex);
         }

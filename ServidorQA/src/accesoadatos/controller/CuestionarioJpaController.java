@@ -26,11 +26,24 @@ import javax.persistence.EntityManagerFactory;
  * @author Carlos Onorio
  */
 public class CuestionarioJpaController implements Serializable {
-
-    public CuestionarioJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
+    
     private EntityManagerFactory emf = null;
+    private final PreguntaJpaController controladorPregunta;
+    private final RespuestaJpaController controladorRespuesta;
+
+    public CuestionarioJpaController(EntityManagerFactory fabricaEntityManager) {
+        this.emf = fabricaEntityManager;
+        controladorPregunta = new PreguntaJpaController(fabricaEntityManager);
+        controladorRespuesta = new RespuestaJpaController(fabricaEntityManager);
+    }
+
+    public PreguntaJpaController getControladorPregunta() {
+        return controladorPregunta;
+    }
+
+    public RespuestaJpaController getControladorRespuesta() {
+        return controladorRespuesta;
+    }
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -228,6 +241,21 @@ public class CuestionarioJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public Cuestionario getCuestionario(Usuario autor, String nombreCuestionario) {
+        EntityManager entityManager = getEntityManager();
+        Query consulta = entityManager.createNamedQuery("Cuestionario.getCuestionario");
+        consulta.setParameter("autor", autor);
+        consulta.setParameter("nombreCuestionario", nombreCuestionario);
+        return (Cuestionario) consulta.getSingleResult();
+    }
+    
+    public List<Cuestionario> getCuestionariosPorAutor(Usuario autor) {
+        EntityManager entityManager = getEntityManager();
+        Query consulta = entityManager.createNamedQuery("Cuestionario.getCuestionariosPorAutor");
+        consulta.setParameter("autor", autor);
+        return consulta.getResultList();
     }
     
 }

@@ -61,6 +61,7 @@ public class VIniciarSesionController implements Initializable {
                 UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard", "VDashboardQA.fxml", textFieldNombreUsuario);
             } catch (RemoteException | NotBoundException ex) {
                 Logger.getLogger(VIniciarSesionController.class.getName()).log(Level.SEVERE, null, ex);
+                UtileriaInterfazUsuario.mostrarMensajeError("key.errorDeConexion", "key.errorAlConectar", "key.problemaConexion");
             } catch (IllegalArgumentException excepcion) {
                 UtileriaInterfazUsuario.mostrarMensajeError("key.falloInicioSesion", "key.credencialesInvalidas", "key.usuarioContraseniaIncorrectos");
             }

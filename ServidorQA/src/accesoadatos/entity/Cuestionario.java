@@ -35,7 +35,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Cuestionario.findById", query = "SELECT c FROM Cuestionario c WHERE c.id = :id")
     , @NamedQuery(name = "Cuestionario.findByNombre", query = "SELECT c FROM Cuestionario c WHERE c.nombre = :nombre")
     , @NamedQuery(name = "Cuestionario.findByVecesJugado", query = "SELECT c FROM Cuestionario c WHERE c.vecesJugado = :vecesJugado")
-    , @NamedQuery(name = "Cuestionario.findByUltimoGanador", query = "SELECT c FROM Cuestionario c WHERE c.ultimoGanador = :ultimoGanador")})
+    , @NamedQuery(name = "Cuestionario.findByUltimoGanador", query = "SELECT c FROM Cuestionario c WHERE c.ultimoGanador = :ultimoGanador")
+    , @NamedQuery(name = "Cuestionario.getCuestionario", query = "SELECT c FROM Cuestionario c WHERE c.autor = :autor AND c.nombre = :nombreCuestionario")
+    , @NamedQuery(name = "Cuestionario.getCuestionariosPorAutor", query = "SELECT c FROM Cuestionario c WHERE c.autor = :autor")})
 public class Cuestionario implements Serializable {
 
     private static final long serialVersionUID = 1L;

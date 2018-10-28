@@ -145,4 +145,12 @@ public class RespuestaJpaController implements Serializable {
         }
     }
     
+    public List<Respuesta> getRespuestasDePregunta(long idCuestionario, int numeroPregunta) {
+        EntityManager entityManager = getEntityManager();
+        Query consulta = entityManager.createNamedQuery("Respuesta.getRespuestasDePregunta");
+        consulta.setParameter("idCuestionario", idCuestionario);
+        consulta.setParameter("numeroPregunta", numeroPregunta);
+        return consulta.getResultList();        
+    }
+    
 }

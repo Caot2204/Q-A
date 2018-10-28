@@ -29,7 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Respuesta.findByNumeroPregunta", query = "SELECT r FROM Respuesta r WHERE r.respuestaPK.numeroPregunta = :numeroPregunta")
     , @NamedQuery(name = "Respuesta.findByLetra", query = "SELECT r FROM Respuesta r WHERE r.respuestaPK.letra = :letra")
     , @NamedQuery(name = "Respuesta.findByDescripcion", query = "SELECT r FROM Respuesta r WHERE r.descripcion = :descripcion")
-    , @NamedQuery(name = "Respuesta.findByCorrecta", query = "SELECT r FROM Respuesta r WHERE r.correcta = :correcta")})
+    , @NamedQuery(name = "Respuesta.findByCorrecta", query = "SELECT r FROM Respuesta r WHERE r.correcta = :correcta")
+    , @NamedQuery(name = "Respuesta.getRespuestasDePregunta", query = "SELECT r FROM Respuesta r WHERE r.respuestaPK.idCuestionario = :idCuestionario AND r.respuestaPK.numeroPregunta = :numeroPregunta")})
 public class Respuesta implements Serializable {
 
     private static final long serialVersionUID = 1L;

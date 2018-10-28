@@ -177,4 +177,11 @@ public class PreguntaJpaController implements Serializable {
         }
     }
     
+    public List<Pregunta> getPreguntasDeCuestionario(long idCuestionario) {
+        EntityManager entityManager = getEntityManager();
+        Query consulta = entityManager.createNamedQuery("Pregunta.findByIdCuestionario");
+        consulta.setParameter("idCuestionario", idCuestionario);
+        return consulta.getResultList();
+    }
+    
 }

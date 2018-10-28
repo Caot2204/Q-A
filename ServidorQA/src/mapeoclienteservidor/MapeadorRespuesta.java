@@ -9,9 +9,17 @@ import accesoadatos.entity.Respuesta;
 import dominio.cuestionario.RespuestaCliente;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utileria.UtileriaCadena;
 
 /**
- *
+ * Clase encargada de convertir una Respuesta que viene del cliente a una entidad
+ * Respuesta que puede ser almacenada en la base de datos
+ * 
+ * @version 1.0 26 Oct 2018
  * @author Carlos Onorio
  */
 public class MapeadorRespuesta {
@@ -27,18 +35,14 @@ public class MapeadorRespuesta {
      * @throws IOException Lanzada si ocurre un error al leer los bytes de la imágen 
      */
     public static Respuesta mapearRespuesta(long idCuestionario, int numeroPregunta, RespuestaCliente respuestaCliente) throws IOException {
-        Respuesta respuestaEntity = new Respuesta();
+        Respuesta respuestaEntity = new Respuesta(idCuestionario, numeroPregunta, respuestaCliente.getLetra());
         
-        respuestaEntity.getRespuestaPK().setIdCuestionario(idCuestionario);
-        respuestaEntity.getRespuestaPK().setNumeroPregunta(numeroPregunta);
-        respuestaEntity.getRespuestaPK().setLetra(respuestaCliente.getLetra());
-        
-        if (validarCadena(respuestaCliente.getDescripcion(), 300)) {
+        if (UtileriaCadena.validarCadena(respuestaCliente.getDescripcion(), 1, 300)) {
             respuestaEntity.setDescripcion(respuestaCliente.getDescripcion());
         }
         
         if (respuestaCliente.getImagen() != null) {
-            respuestaEntity.setImagen(Files.readAllBytes(respuestaCliente.getImagen().toPath()));
+            respuestaEntity.setImagen(respuestaCliente.getImagen());
         }
         
         respuestaEntity.setCorrecta(respuestaCliente.isEsCorrecta());
@@ -47,19 +51,48 @@ public class MapeadorRespuesta {
     }
     
     /**
-     * Valida que una cadena no sea nula, no esté vacía y no sobrepase la cantidad máxima de 
-     * caracteres validos para la cadena
+     * Convierte un conjunto de Respuestas provenientes del cliente a un conjunto de 
+     * entidades Respuesta que pueden ser almacenadas en la base de datos
      * 
-     * @param cadena Cadena de caracteres a validar
-     * @param longitudMaxima Longitud máxima de caracteres permitida
-     * @return True si la cadena es valida, false si no lo es
+     * @param idCuestionario Identificador del Cuestionario al cual pertenece la respuesta
+     * @param numeroPregunta Número de pregunta a la cual está asociada la respuesta
+     * @param respuestasDePregunta Respuestas de una Pregunta
+     * @return Lista de Entidades JPA Respuesta
      */
-    private static boolean validarCadena(String cadena, int longitudMaxima) {
-        boolean camposValidos = false;
-        if (cadena != null && !cadena.isEmpty() && cadena.length() <= longitudMaxima) {
-            camposValidos = true;
+    public static ArrayList<Respuesta> mapearRespuestasDePregunta(long idCuestionario, int numeroPregunta, ArrayList<RespuestaCliente> respuestasDePregunta) {
+        ArrayList<Respuesta> respuestasEntity = new ArrayList<>();
+        
+        respuestasDePregunta.forEach((respuestaCliente) -> {
+            try {
+                respuestasEntity.add(mapearRespuesta(idCuestionario, numeroPregunta, respuestaCliente));
+            } catch (IOException ex) {
+                Logger.getLogger(MapeadorRespuesta.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        return respuestasEntity;
+    }
+    
+    /**
+     * Convierte un conjunto de entidades JPA Respuesta a un conjunto de 
+     * Respuestas compatibles para el cliente
+     * 
+     * @param respuestasEntity Lista de Entidades JPA Respuesta recuperadas de la base de datos
+     * @return Lista de RespuestaCliente
+     */
+    public static ArrayList<RespuestaCliente> mapearARespuestasCliente(List<Respuesta> respuestasEntity) {
+        ArrayList<RespuestaCliente> respuestasCliente = new ArrayList<>();
+        
+        for (Respuesta respuestaEntity : respuestasEntity) {
+            RespuestaCliente respuestaCliente = new RespuestaCliente();
+            respuestaCliente.setLetra(respuestaEntity.getRespuestaPK().getLetra());
+            respuestaCliente.setDescripcion(respuestaEntity.getDescripcion());
+            respuestaCliente.setImagen(respuestaEntity.getImagen());
+            respuestaCliente.setEsCorrecta(respuestaEntity.getCorrecta());
+            respuestasCliente.add(respuestaCliente);
         }
-        return camposValidos;
+        
+        return respuestasCliente;
     }
     
 }
