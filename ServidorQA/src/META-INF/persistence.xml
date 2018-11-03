@@ -2,10 +2,10 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="ServidorQAPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>accesoadatos.entity.Respuesta</class>
-    <class>accesoadatos.entity.Usuario</class>
-    <class>accesoadatos.entity.Cuestionario</class>
-    <class>accesoadatos.entity.Pregunta</class>
+    <class>mx.fei.qa.accesoadatos.entity.Cuestionario</class>
+    <class>mx.fei.qa.accesoadatos.entity.Pregunta</class>
+    <class>mx.fei.qa.accesoadatos.entity.Usuario</class>
+    <class>mx.fei.qa.accesoadatos.entity.Respuesta</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/qa_db?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="usuarioqa"/>

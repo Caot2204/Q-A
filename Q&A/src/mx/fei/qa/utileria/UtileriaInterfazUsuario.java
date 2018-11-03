@@ -1,0 +1,125 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mx.fei.qa.utileria;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Control;
+import javafx.stage.Stage;
+
+/**
+ * Proporciona un conjunto de métodos comúnes para que el sistema se comunique
+ * con el usuario
+ *
+ * @version 1.0 26 Oct 2018
+ * @author Carlos Onorio
+ */
+public class UtileriaInterfazUsuario {
+
+    private static ResourceBundle recurso;
+
+    /**
+     * Cierra la IU actual y despliega la IU especificada en los parámetros
+     *
+     * @param clase
+     * @param llaveTitulo Llave para archivo de propiedades que contiene el
+     * titulo de la ventana en el idioma actual
+     * @param nombreFXML Nombre del archivo .fxml
+     * @param elementoInterfaz Elemento IU de JavaFX para hacer referencia a la
+     * ventana actual
+     */
+    public static void mostrarVentana(Class clase, String llaveTitulo, String nombreFXML, Control elementoInterfaz) {
+        Locale locale = Locale.getDefault();
+        recurso = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        String titulo = recurso.getString(llaveTitulo);
+        try {
+            Parent root = FXMLLoader.load(clase.getResource(nombreFXML), recurso);
+            Stage escenario = new Stage();
+            Scene scene = new Scene(root);
+            escenario.setScene(scene);
+            escenario.setTitle(titulo);
+            escenario.show();
+
+            if (elementoInterfaz != null) {
+                Stage escenarioActual = (Stage) elementoInterfaz.getScene().getWindow();
+                escenarioActual.close();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(UtileriaInterfazUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Despliega un mensaje de error al usuario
+     *
+     * @param llaveTitulo Llave para archivo de propiedades que contiene el
+     * Titulo del mensaje en el idioma actual
+     * @param llaveEncabezado Llave para archivo de propiedades que contiene el
+     * Encabezado de la ventana del mensaje
+     * @param llaveMensaje Llave para archivo de propiedades que contiene el
+     * Mensaje que se desea mostrar al usuario
+     */
+    public static void mostrarMensajeError(String llaveTitulo, String llaveEncabezado, String llaveMensaje) {
+        String titulo = recurso.getString(llaveTitulo);
+        String encabezado = recurso.getString(llaveEncabezado);
+        String mensaje;
+        if (llaveMensaje.contains(recurso.getString("key.tamanioValidoCampo"))) {
+            mensaje = llaveMensaje;
+        } else {
+            mensaje = recurso.getString(llaveMensaje);
+        }
+
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(encabezado);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
+    /**
+     * Despliega un mensaje de éxito al usuario para notificar que alguna acción
+     * se realizó correctamente en el sistema
+     *
+     * @param titulo Título de la ventana del mensaje
+     * @param encabezado Encabezado de la ventana del mensaje
+     * @param mensaje Mensaje de éxito que se desea mostrar al usuario
+     */
+    public static void mostrarMensajeExito(String titulo, String encabezado, String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(encabezado);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
+    /**
+     * Genera un mensaje de error para el usuario, notificando que la cadena
+     * esta dentro del rango permitido de caracteres
+     *
+     * @param minimo Mínimo de caracteres
+     * @param maximo Máximo de caracteres
+     * @return Cadena con el mensaje de error generado
+     */
+    public static String generarCadenaRangoInvalidoParaMensaje(int minimo, int maximo) {
+        String cadena;
+        String primerParte = recurso.getString("key.tamanioValidoCampo");
+        String segundaParte = recurso.getString("key.hasta");
+        String terceraParte = recurso.getString("key.caracteres");
+
+        cadena = primerParte + " " + Integer.toString(minimo) + " " + segundaParte + " "
+                + Integer.toString(maximo) + " " + terceraParte;
+
+        return cadena;
+    }
+
+}
