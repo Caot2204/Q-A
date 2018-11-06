@@ -5,6 +5,10 @@
  */
 package mx.fei.qa.partida;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import java.net.URISyntaxException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -23,6 +27,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import mx.fei.qa.comunicacion.interfaz.PartidaInterface;
+import mx.fei.qa.dominio.cuestionario.PreguntaCliente;
+import mx.fei.qa.dominio.cuestionario.RespuestaCliente;
 import mx.fei.qa.sesion.AdministradorSesionActual;
 import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 
@@ -33,17 +39,36 @@ import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 public class AdministradorPartida {
 
     private static AdministradorPartida administrador;
+    private Socket socket;
     private Partida partida;
 
     public static AdministradorPartida obtenerInstancia() {
         if (administrador == null) {
-            administrador = new AdministradorPartida();
+            try {
+                administrador = new AdministradorPartida();
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(AdministradorPartida.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return administrador;
     }
 
-    private AdministradorPartida() {
-
+    private AdministradorPartida() throws URISyntaxException {
+        this.socket = IO.socket("http://localhost:5000");
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... os) {
+                socket.emit("unirAPartida", partida.getCodigoInvitacion());
+            }
+        }).on("recibirRespuesta", new Emitter.Listener() {
+            @Override
+            public void call(Object... os) {
+                char respuesta = (char) os[0];
+                PuntajeJugador puntaje = (PuntajeJugador) os[1];
+                partida.getGraficaPreguntaActual().actualizarGrafica(respuesta);
+                partida.actualizarMarcador(puntaje);
+            }
+        });
     }
 
     public boolean iniciarPartida(String nombreCuestionario) {
@@ -105,4 +130,33 @@ public class AdministradorPartida {
         }
     }
 
+    public void empezarJuego() {
+        short codigoPartida = partida.getCodigoInvitacion();
+        PreguntaCliente pregunta = partida.obtenerPrimerPregunta();
+        socket.emit("enviarSiguientePregunta", codigoPartida, pregunta);
+    }
+    
+    public void enviarPreguntaAJugadores() {
+        short codigoPartida = partida.getCodigoInvitacion();
+        PreguntaCliente pregunta = partida.obtenerPrimerPregunta();
+        socket.emit("enviarSiguientePregunta", codigoPartida, pregunta);
+    }
+    
+    public void enviarRespuestasAJugadores() {
+        short codigoPartida = partida.getCodigoInvitacion();
+        ArrayList<RespuestaCliente> respuestas = partida.obtenerRespuestasPreguntaActual();
+        socket.emit("enviarRespuestasDePregunta", codigoPartida, respuestas);
+    }
+    
+    public void enviarGraficaRepuestasAJugadores() {
+        short codigoPartida = partida.getCodigoInvitacion();
+        GraficaRespuestas grafica = partida.getGraficaPreguntaActual();
+        socket.emit("enviarGraficaRepuestas", codigoPartida, grafica);
+    }
+    
+    public void enviarMarcadorAJugadores() {
+        short codigoPartida = partida.getCodigoInvitacion();
+        ArrayList<PuntajeJugador> marcador = partida.getMarcador();
+        socket.emit("enviarMarcador", codigoPartida, marcador);
+    }
 }
