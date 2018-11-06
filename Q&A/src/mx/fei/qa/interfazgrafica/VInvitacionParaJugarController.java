@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import mx.fei.qa.partida.AdministradorPartida;
+import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 
 /**
  * FXML Controller class
@@ -47,6 +48,7 @@ public class VInvitacionParaJugarController implements Initializable {
             correos.addAll(Arrays.asList(correosIngresados));
             AdministradorPartida administradorPartida = AdministradorPartida.obtenerInstancia();
             administradorPartida.enviarInvitaciones(correos);
+            UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA", "AJugarQA.fxml", textFieldCorreos);
         }
     }
 
