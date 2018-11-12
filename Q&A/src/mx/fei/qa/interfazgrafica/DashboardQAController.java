@@ -73,7 +73,8 @@ public class DashboardQAController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         administradorSesion = AdministradorSesionActual.obtenerAdministrador();
         try {
-            Registry registro = LocateRegistry.getRegistry();
+            ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+            Registry registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
             stubCuentaUsuario = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
             stubCuestionario = (CuestionarioInterface) registro.lookup("servidorCuestionarios");
         } catch (RemoteException | NotBoundException ex) {
@@ -130,12 +131,12 @@ public class DashboardQAController implements Initializable {
         try {
             if (stubCuentaUsuario.cerrarSesion(administradorSesion.getSesionUsuario().getUsuario().getNombre())) {
                 administradorSesion.removerSesionActual();
-                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal", 
+                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal",
                         "Principal.fxml", labelNombreUsuario);
             }
         } catch (RemoteException ex) {
             Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
-            UtileriaInterfazUsuario.mostrarMensajeError("key.errorDeConexion", 
+            UtileriaInterfazUsuario.mostrarMensajeError("key.errorDeConexion",
                     "key.errorAlConectar", "key.problemaConexion");
         }
     }

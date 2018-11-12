@@ -64,7 +64,7 @@ public class Partida implements Serializable {
         for (int a = 0; a < marcador.size(); a++) {
             PuntajeJugador puntajeJugador = marcador.get(a);
             if (puntajeJugador.getJugador().getNombre().equals(jugador)) {
-                puntajeJugador.aumentarPuntaje(puntaje);
+                puntajeJugador.setPuntaje(puntaje);
             }
         }
 

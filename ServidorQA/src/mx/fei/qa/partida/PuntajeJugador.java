@@ -36,6 +36,10 @@ public class PuntajeJugador implements Serializable {
     public int getPuntaje() {
         return puntaje;
     }
+    
+    public void setPuntaje(int puntaje) {
+        this.puntaje = puntaje;
+    }
 
     public void aumentarPuntaje(int puntaje) {
         this.puntaje += puntaje;

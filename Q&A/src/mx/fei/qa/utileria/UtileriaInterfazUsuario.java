@@ -114,11 +114,23 @@ public class UtileriaInterfazUsuario {
      * Despliega un mensaje de éxito al usuario para notificar que alguna acción
      * se realizó correctamente en el sistema.
      *
-     * @param titulo Título de la ventana del mensaje
-     * @param encabezado Encabezado de la ventana del mensaje
-     * @param mensaje Mensaje de éxito que se desea mostrar al usuario
+     * @param llaveTitulo Llave para archivo de propiedades que contiene el
+     * Titulo del mensaje en el idioma actual
+     * @param llaveEncabezado Llave para archivo de propiedades que contiene el
+     * Encabezado de la ventana del mensaje
+     * @param llaveMensaje Llave para archivo de propiedades que contiene el
+     * Mensaje que se desea mostrar al usuario
      */
-    public static void mostrarMensajeExito(String titulo, String encabezado, String mensaje) {
+    public static void mostrarMensajeExito(String llaveTitulo, String llaveEncabezado, String llaveMensaje) {
+        String titulo = recurso.getString(llaveTitulo);
+        String encabezado = recurso.getString(llaveEncabezado);
+        String mensaje;
+        if (llaveMensaje.contains(recurso.getString("key.tamanioValidoCampo"))) {
+            mensaje = llaveMensaje;
+        } else {
+            mensaje = recurso.getString(llaveMensaje);
+        }
+        
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
         alerta.setTitle(titulo);
         alerta.setHeaderText(encabezado);

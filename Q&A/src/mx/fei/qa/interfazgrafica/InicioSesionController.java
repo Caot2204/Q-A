@@ -54,7 +54,8 @@ public class InicioSesionController implements Initializable {
     public void iniciarSesion() {
         if (validarCampos()) {
             try {
-                Registry registro = LocateRegistry.getRegistry();
+                ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+                Registry registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
                 CuentaUsuarioInterface stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
                 AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
                 administradorSesion.setSesionUsuario(stub.iniciarSesion(usuario, contrasenia));

@@ -70,15 +70,23 @@ public class MuestraPreguntaRespuestasController implements Initializable {
     private JugadorPartida jugadorPartida;
 
     /**
-     * Muestra la pregunta actual si se detecta que el cliente actual es el
-     * monitor de la partida
+     * Inhabilida las acciones al dar clic a una respuesta si se detecta que el
+     * usuario es monitor de la partida.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        contador = 20;        
+        contador = 20;
         if (MonitorPartida.existeMonitorPartida()) {
             PreguntaCliente preguntaActual = MonitorPartida.obtenerInstancia()
                     .getPreguntaActual();
+            labelRespuestaA.setOnMouseClicked(null);
+            imageViewRespuestaA.setOnMouseClicked(null);
+            labelRespuestaB.setOnMouseClicked(null);
+            imageViewRespuestaB.setOnMouseClicked(null);
+            labelRespuestaC.setOnMouseClicked(null);
+            imageViewRespuestaC.setOnMouseClicked(null);
+            labelRespuestaD.setOnMouseClicked(null);
+            imageViewRespuestaD.setOnMouseClicked(null);
             desplegarPreguntaYRespuestas(preguntaActual);
         } else {
             jugadorPartida = JugadorPartida.obtenerInstancia();
@@ -88,7 +96,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Despliega la pregunta actual junto a sus respectivas respuestas con/sin
-     * su descripción y/o imágenes
+     * su descripción y/o imágenes.
      *
      * @param pregunta Pregunta con respuesta a mostrar en la IU.
      */
@@ -107,7 +115,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
     }
 
     /**
-     * Inicia la cuenta regresiva para mostrar las respuestas
+     * Inicia la cuenta regresiva para mostrar las respuestas.
      */
     private void contarSegundos() {
         temporizador = FxTimer.runPeriodically(Duration.ofMillis(1000), () -> {
@@ -116,7 +124,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
     }
 
     /**
-     * Lleva el control del contador de la IU
+     * Lleva el control del contador de la IU.
      */
     private void actualizarContador() {
         contador--;
@@ -136,7 +144,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Permite al jugador responder a la pregunta con la respuesta A, si es
-     * correcta se calcula su puntaje y se notifica al monitor
+     * correcta se calcula su puntaje y se notifica al monitor.
      */
     public void responderA() {
         if (respuestaA.isEsCorrecta()) {
@@ -152,7 +160,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Permite al jugador responder a la pregunta con la respuesta B, si es
-     * correcta se calcula su puntaje y se notifica al monitor
+     * correcta se calcula su puntaje y se notifica al monitor.
      */
     public void responderB() {
         if (respuestaB.isEsCorrecta()) {
@@ -168,7 +176,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Permite al jugador responder a la pregunta con la respuesta C, si es
-     * correcta se calcula su puntaje y se notifica al monitor
+     * correcta se calcula su puntaje y se notifica al monitor.
      */
     public void responderC() {
         if (respuestaC.isEsCorrecta()) {
@@ -184,7 +192,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Permite al jugador responder a la pregunta con la respuesta D, si es
-     * correcta se calcula su puntaje y se notifica al monitor
+     * correcta se calcula su puntaje y se notifica al monitor.
      */
     public void responderD() {
         if (respuestaD.isEsCorrecta()) {
@@ -199,7 +207,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
     }
 
     /**
-     * Calcula y aumenta el puntaje de un jugador al responder una pregunta
+     * Calcula y aumenta el puntaje de un jugador al responder una pregunta.
      */
     private void calcularPuntajeGanado() {
         int puntajeObtenido = 1000 + (contador * 20);
@@ -208,7 +216,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Muestra una notificación indicando que el jugador respondió correctamente
-     * a la pregunta
+     * a la pregunta.
      */
     public void mostrarMensajeRespuestaCorrecta() {
         UtileriaInterfazUsuario.mostrarMensajeExito("key.respuestaCorrecta",
@@ -217,7 +225,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
     /**
      * Muestra una notificación indicando que el jugador se equivocó de
-     * respuesta
+     * respuesta.
      */
     public void mostrarMensajeRespuestaIncorrecta() {
         Locale locale = Locale.getDefault();
