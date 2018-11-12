@@ -3,11 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/utileria/cliente.properties</file>
-            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/VInvitacionParaJugarController.java</file>
-            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/partida/AdministradorPartida.java</file>
-            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/VIniciarSesionController.java</file>
-            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/VPrincipalController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/JugadorPartida.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/PrincipalController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/MedalleroController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/ChatController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/MuestraPreguntaRespuestasController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/MarcadorJugadoresController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/MonitorPartida.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/GraficaRespuestasController.java</file>
+            <file>file:/C:/Users/Carlos%20Onorio/Documents/GitHub/Q-A/Q&amp;A/src/mx/fei/qa/interfazgrafica/MuestraDePreguntaController.java</file>
         </group>
     </open-files>
 </project-private>

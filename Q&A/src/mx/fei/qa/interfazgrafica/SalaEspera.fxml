@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.SalaEsperaController">
+   <children>
+      <Label layoutX="47.0" layoutY="170.0" prefHeight="51.0" prefWidth="957.0" text="%key.salaDeEspera">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelPuntajeActual" layoutX="47.0" layoutY="421.0" prefHeight="39.0" prefWidth="957.0" text="Label">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelNombreJugador" layoutX="47.0" layoutY="303.0" prefHeight="45.0" prefWidth="957.0" text="Label">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Button layoutX="941.0" layoutY="14.0" mnemonicParsing="false" onAction="#mostrarChat" prefHeight="35.0" prefWidth="95.0" text="%key.chat" />
+   </children>
+</AnchorPane>

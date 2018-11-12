@@ -6,8 +6,15 @@
 package mx.fei.qa.interfazgrafica;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 
 /**
  * FXML Controller class
@@ -16,12 +23,42 @@ import javafx.fxml.Initializable;
  */
 public class ListaJugadoresConectadosController implements Initializable {
 
+    @FXML
+    private AnchorPane panel;
+
+    @FXML
+    private ListView listViewIzquierda;
+
+    @FXML
+    private ListView listViewCentro;
+
+    @FXML
+    private ListView listViewDerecha;
+
+    @FXML
+    private Button buttonEmpezarJuego;
+
+    private MonitorPartida monitorPartida;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        if (MonitorPartida.existeMonitorPartida()) {
+            monitorPartida = MonitorPartida.obtenerInstancia();
+        } else {
+            buttonEmpezarJuego.setDisable(true);
+            buttonEmpezarJuego.setVisible(false);
+        }
+    }
+
+    /**
+     * Comienza la partida actual.
+     */
+    public void empezarJuego() {
+        monitorPartida.empezarJuego();
+        UtileriaInterfazUsuario.cerrarVentanaMedianteElementoFX(listViewCentro);
+    }
+
 }

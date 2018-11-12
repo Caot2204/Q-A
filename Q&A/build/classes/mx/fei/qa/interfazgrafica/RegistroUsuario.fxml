@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="451.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.RegistroUsuarioController">
+   <children>
+      <Button layoutX="17.0" layoutY="401.0" mnemonicParsing="false" onAction="#cancelarRegistro" prefHeight="25.0" prefWidth="132.0" text="%key.cancelar" />
+      <Button layoutX="209.0" layoutY="401.0" mnemonicParsing="false" onAction="#finalizarRegistro" prefHeight="25.0" prefWidth="132.0" text="%key.finalizarRegistro" />
+      <TextField fx:id="textFieldNombreUsuario" layoutX="77.0" layoutY="188.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.nombreUsuario" />
+      <TextField fx:id="textFieldCorreo" layoutX="77.0" layoutY="251.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.correoElectronico" />
+      <TextField fx:id="textFieldContrasenia" layoutX="77.0" layoutY="322.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.contrasenia" />
+      <ImageView fitHeight="42.0" fitWidth="36.0" layoutX="27.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/ic-username_97587.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="27.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/correo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="40.0" fitWidth="57.0" layoutX="17.0" layoutY="322.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/contraseña.jpg" />
+         </image>
+      </ImageView>
+      <Button layoutX="116.0" layoutY="139.0" mnemonicParsing="false" onAction="#subirFotoPerfil" prefHeight="25.0" prefWidth="125.0" text="%key.subirFotoPerfil" />
+      <ImageView fx:id="imageViewFotoPerfil" fitHeight="113.0" fitWidth="125.0" layoutX="116.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="192.0" prefWidth="281.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.InicioSesionController">
+   <children>
+      <TextField fx:id="textFieldNombreUsuario" layoutX="14.0" layoutY="27.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.nombreUsuario">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <Button layoutX="84.0" layoutY="139.0" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="39.0" prefWidth="113.0" text="%key.iniciarSesion" />
+      <PasswordField fx:id="passwordFieldContrasenia" layoutX="14.0" layoutY="78.0" prefHeight="39.0" prefWidth="254.0" promptText="%key.contrasenia" />
+   </children>
+</AnchorPane>

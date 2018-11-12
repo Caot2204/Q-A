@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="427.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.DashboardQAController">
+   <children>
+      <Label layoutX="59.0" layoutY="14.0" text="%key.tusCuestionarios">
+         <font>
+            <Font size="22.0" />
+         </font></Label>
+      <TableView fx:id="tableViewCuestionarios" layoutX="14.0" layoutY="68.0" prefHeight="341.0" prefWidth="597.0">
+        <columns>
+          <TableColumn fx:id="tableColumnNombreCuestionario" prefWidth="209.0" text="%key.nombreCuestionario" />
+          <TableColumn fx:id="tableColumnCantidadPreguntas" minWidth="8.0" prefWidth="71.0" text="%key.preguntas" />
+            <TableColumn fx:id="tableColumnVecesJugado" prefWidth="89.0" text="%key.vecesJugado" />
+            <TableColumn fx:id="tableColumnUltimoGanador" prefWidth="227.0" text="%key.ultimoGanador" />
+        </columns>
+      </TableView>
+      <Button layoutX="623.0" layoutY="134.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" text="%key.crearCuestionario" />
+      <Button layoutX="623.0" layoutY="191.0" mnemonicParsing="false" onAction="#jugarCuestionario" prefHeight="40.0" prefWidth="140.0" text="%key.jugar" />
+      <Button layoutX="623.0" layoutY="248.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" text="%key.editarCuestionario" />
+      <Button layoutX="623.0" layoutY="304.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" text="%key.borrarCuestionario" />
+      <ImageView fitHeight="25.0" fitWidth="35.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/iconoPreguntasYRespuestas.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imageViewFotoPerfil" fitHeight="25.0" fitWidth="31.0" layoutX="706.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/fotoPerfilDefault.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="labelNombreUsuario" layoutX="299.0" layoutY="22.0" prefHeight="17.0" prefWidth="407.0" text="%key.nombreUsuarioDefault" textAlignment="RIGHT" />
+      <MenuButton layoutX="733.0" layoutY="18.0" mnemonicParsing="false">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#editarCuentaUsuario" text="%key.editarCuenta" />
+          <MenuItem mnemonicParsing="false" onAction="#cerrarSesion" text="%key.cerrarSesion" />
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>

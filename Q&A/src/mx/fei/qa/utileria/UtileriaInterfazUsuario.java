@@ -29,9 +29,9 @@ public class UtileriaInterfazUsuario {
     private static ResourceBundle recurso;
 
     /**
-     * Cierra la IU actual y despliega la IU especificada en los parámetros
+     * Cierra la IU actual y despliega la IU especificada en los parámetros.
      *
-     * @param clase
+     * @param clase Clase actual desde donde se manda a llamar este método
      * @param llaveTitulo Llave para archivo de propiedades que contiene el
      * titulo de la ventana en el idioma actual
      * @param nombreFXML Nombre del archivo .fxml
@@ -60,7 +60,31 @@ public class UtileriaInterfazUsuario {
     }
 
     /**
-     * Despliega un mensaje de error al usuario
+     * Despliega la IU especificada en los parámetros.
+     *
+     * @param clase Clase actual desde donde se manda a llamar este método
+     * @param llaveTitulo Llave para archivo de propiedades que contiene el
+     * titulo de la ventana en el idioma actual
+     * @param nombreFXML Nombre del archivo .fxml
+     */
+    public static void mostrarVentanaSinCerrarActual(Class clase, String llaveTitulo, String nombreFXML) {
+        Locale locale = Locale.getDefault();
+        recurso = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        String titulo = recurso.getString(llaveTitulo);
+        try {
+            Parent root = FXMLLoader.load(clase.getResource(nombreFXML), recurso);
+            Stage escenario = new Stage();
+            Scene scene = new Scene(root);
+            escenario.setScene(scene);
+            escenario.setTitle(titulo);
+            escenario.show();
+        } catch (IOException ex) {
+            Logger.getLogger(UtileriaInterfazUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Despliega un mensaje de error al usuario.
      *
      * @param llaveTitulo Llave para archivo de propiedades que contiene el
      * Titulo del mensaje en el idioma actual
@@ -88,7 +112,7 @@ public class UtileriaInterfazUsuario {
 
     /**
      * Despliega un mensaje de éxito al usuario para notificar que alguna acción
-     * se realizó correctamente en el sistema
+     * se realizó correctamente en el sistema.
      *
      * @param titulo Título de la ventana del mensaje
      * @param encabezado Encabezado de la ventana del mensaje
@@ -104,7 +128,7 @@ public class UtileriaInterfazUsuario {
 
     /**
      * Genera un mensaje de error para el usuario, notificando que la cadena
-     * esta dentro del rango permitido de caracteres
+     * esta dentro del rango permitido de caracteres.
      *
      * @param minimo Mínimo de caracteres
      * @param maximo Máximo de caracteres
@@ -120,6 +144,16 @@ public class UtileriaInterfazUsuario {
                 + Integer.toString(maximo) + " " + terceraParte;
 
         return cadena;
+    }
+
+    /**
+     * Cierra la ventana en donde se encuentre el elementoInterfaz.
+     *
+     * @param elementoInterfaz Elemento JavaFX
+     */
+    public static void cerrarVentanaMedianteElementoFX(Control elementoInterfaz) {
+        Stage escenarioActual = (Stage) elementoInterfaz.getScene().getWindow();
+        escenarioActual.close();
     }
 
 }

@@ -13,16 +13,19 @@ import mx.fei.qa.partida.Partida;
 /**
  * Métodos para el objeto RMI encargado de la administración de las partidas
  *
- * @version 1.0 28 Oct 2018
+ * @version 1.0 11 Nov 2018
  * @author Carlos Onorio
  */
 public interface PartidaInterface extends Remote {
 
-    public Partida crearPartida(String dueñoCuestionario, String nombreCuestionario) throws RemoteException;
+    public short crearPartida(String dueñoCuestionario, String nombreCuestionario) throws RemoteException;
 
-    public boolean finalizarPartida(long codigoInvitacion) throws RemoteException;
+    public boolean finalizarPartida(short codigoInvitacion) throws RemoteException;
 
-    public boolean unirAPartida(long codigoInvitacion, Jugador jugador) throws RemoteException;
+    public boolean unirAPartida(short codigoInvitacion, Jugador jugador) throws RemoteException;
 
-    public boolean validarCodigoInvitacion(long codigoInvitacion) throws RemoteException;
+    public boolean validarCodigoInvitacion(short codigoInvitacion) throws RemoteException;
+
+    public Partida recuperarPartida(short codigoInvitacion) throws RemoteException;
+
 }

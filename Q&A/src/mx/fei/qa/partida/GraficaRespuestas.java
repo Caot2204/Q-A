@@ -53,4 +53,20 @@ public class GraficaRespuestas implements Serializable {
         }
     }
 
+    public int getContadorA() {
+        return contadorA;
+    }
+
+    public int getContadorB() {
+        return contadorB;
+    }
+
+    public int getContadorC() {
+        return contadorC;
+    }
+
+    public int getContadorD() {
+        return contadorD;
+    }
+    
 }

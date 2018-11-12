@@ -7,13 +7,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="mx.fei.qa.interfazgrafica.ListaJugadoresConectadosController">
+<AnchorPane id="AnchorPane" fx:id="panel" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.ListaJugadoresConectadosController">
    <children>
-      <ListView fx:id="listViewListaIzquierda" layoutX="26.0" layoutY="219.0" prefHeight="333.0" prefWidth="291.0" />
-      <ListView fx:id="listViewListaCentro" layoutX="380.0" layoutY="219.0" prefHeight="333.0" prefWidth="291.0" />
-      <ListView fx:id="listViewListaDerecha" layoutX="736.0" layoutY="219.0" prefHeight="333.0" prefWidth="291.0" />
-      <Button layoutX="875.0" layoutY="589.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="152.0" text="%key.empezarJuego">
+      <ListView fx:id="listViewIzquierda" layoutX="26.0" layoutY="219.0" prefHeight="333.0" prefWidth="291.0" />
+      <ListView fx:id="listViewCentro" layoutX="380.0" layoutY="219.0" prefHeight="333.0" prefWidth="291.0" />
+      <ListView fx:id="listViewDerecha" layoutX="736.0" layoutY="219.0" prefHeight="333.0" prefWidth="291.0" />
+      <Button fx:id="buttonEmpezarJuego" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#empezarJuego" prefHeight="38.0" prefWidth="152.0" text="%key.empezarJuego">
          <font>
             <Font size="13.0" />
          </font>

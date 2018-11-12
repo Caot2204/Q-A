@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.MuestraPreguntaRespuestasController">
+   <children>
+      <Circle fill="WHITE" layoutX="966.0" layoutY="248.0" radius="60.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutX="525.0" layoutY="527.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutX="525.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutY="527.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Label fx:id="labelRespuestaA" layoutY="405.0" onMouseClicked="#responderA" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaA" fitHeight="123.0" fitWidth="178.0" layoutX="347.0" layoutY="404.0" onMouseClicked="#responderA" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageViewPregunta" fitHeight="223.0" fitWidth="337.0" layoutX="358.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelPregunta" layoutX="178.0" layoutY="21.0" prefHeight="67.0" prefWidth="723.0" text="Label">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelContador" layoutX="937.0" layoutY="210.0" text="00">
+         <font>
+            <Font size="53.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaB" fitHeight="123.0" fitWidth="178.0" layoutX="873.0" layoutY="405.0" onMouseClicked="#responderB" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaB" layoutX="526.0" layoutY="406.0" onMouseClicked="#responderB" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaC" fitHeight="123.0" fitWidth="178.0" layoutX="348.0" layoutY="527.0" onMouseClicked="#responderC" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaC" layoutX="1.0" layoutY="528.0" onMouseClicked="#responderC" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaD" fitHeight="123.0" fitWidth="178.0" layoutX="873.0" layoutY="527.0" onMouseClicked="#responderD" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaD" layoutX="526.0" layoutY="528.0" onMouseClicked="#responderD" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

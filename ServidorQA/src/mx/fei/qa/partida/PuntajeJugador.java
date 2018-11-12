@@ -12,7 +12,7 @@ import mx.fei.qa.dominio.actores.Jugador;
  * Puntaje obtenido por un jugador al responder a una pregunta del cuestionario
  * de la partida
  *
- * @version 1.0 29 Oct 2018
+ * @version 1.0 11 Nov 2018
  * @author Carlos Onorio
  */
 public class PuntajeJugador implements Serializable {
@@ -37,8 +37,8 @@ public class PuntajeJugador implements Serializable {
         return puntaje;
     }
 
-    public void setPuntaje(int puntaje) {
-        this.puntaje = puntaje;
+    public void aumentarPuntaje(int puntaje) {
+        this.puntaje += puntaje;
     }
 
 }

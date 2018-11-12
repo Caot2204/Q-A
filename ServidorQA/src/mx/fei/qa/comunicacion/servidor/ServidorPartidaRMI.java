@@ -38,27 +38,28 @@ public class ServidorPartidaRMI implements PartidaInterface {
      *
      * @param autorCuestionario Usuario que registro el cuestionario a jugar
      * @param nombreCuestionario Nombre del cuestionario que se jugará
-     * @return Partida crea para que el usuario la monitoree
+     * @return True si la partida se creó exitosamente, False si no fué así
      * @throws RemoteException Lanzada si ocurre algún problema en la conexión
      * cliente-servidor
      */
     @Override
-    public Partida crearPartida(String autorCuestionario, String nombreCuestionario) throws RemoteException {
-        Partida partida = null;
+    public short crearPartida(String autorCuestionario, String nombreCuestionario) throws RemoteException {
+        short codigoInvitacion = -1;
         Registry registro = LocateRegistry.getRegistry();
         try {
             CuestionarioInterface stubCuestionario = (CuestionarioInterface) registro.lookup("servidorCuestionarios");
             CuestionarioCliente cuestionarioAJugar = stubCuestionario.recuperarCuestionario(autorCuestionario, nombreCuestionario);
-            partida = new Partida(cuestionarioAJugar);
+            Partida partida = new Partida(cuestionarioAJugar);
             partida.generarCodigoInvitacion();
             while (validarCodigoInvitacion(partida.getCodigoInvitacion())) {
                 partida.generarCodigoInvitacion();
             }
             partidasActuales.add(partida);
+            codigoInvitacion = partida.getCodigoInvitacion();
         } catch (NotBoundException | AccessException ex) {
             Logger.getLogger(ServidorPartidaRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return partida;
+        return codigoInvitacion;
     }
 
     /**
@@ -72,7 +73,7 @@ public class ServidorPartidaRMI implements PartidaInterface {
      * cliente-servidor
      */
     @Override
-    public boolean finalizarPartida(long codigoInvitacion) throws RemoteException {
+    public boolean finalizarPartida(short codigoInvitacion) throws RemoteException {
         boolean finalizacionExitosa = false;
 
         for (int a = 0; a < partidasActuales.size(); a++) {
@@ -99,7 +100,7 @@ public class ServidorPartidaRMI implements PartidaInterface {
      * cliente-servidor
      */
     @Override
-    public boolean unirAPartida(long codigoInvitacion, Jugador jugador) throws RemoteException {
+    public boolean unirAPartida(short codigoInvitacion, Jugador jugador) throws RemoteException {
         boolean jugadorAgregado = false;
 
         if (validarCodigoInvitacion(codigoInvitacion)) {
@@ -126,7 +127,7 @@ public class ServidorPartidaRMI implements PartidaInterface {
      * cliente-servidor
      */
     @Override
-    public boolean validarCodigoInvitacion(long codigoInvitacion) throws RemoteException {
+    public boolean validarCodigoInvitacion(short codigoInvitacion) throws RemoteException {
         boolean codigoInvitacionExistente = false;
 
         for (Partida partida : partidasActuales) {
@@ -139,6 +140,27 @@ public class ServidorPartidaRMI implements PartidaInterface {
         return codigoInvitacionExistente;
     }
     
+    /**
+     * Devuele la partida que tenga el código de invitación pasado como
+     * parámetro
+     *
+     * @param codigoInvitacion Código de invitación de la partida a recuperar
+     * @return Datos de la Partida
+     * @throws RemoteException Lanzada si ocurre algún fallo en la conexión
+     * cliente-servidor
+     */
+    @Override
+    public Partida recuperarPartida(short codigoInvitacion) throws RemoteException {
+        Partida partida = null;
+        for (int a = 0; a < partidasActuales.size(); a++) {
+            Partida partidaActual = partidasActuales.get(a);
+            if (partidaActual.getCodigoInvitacion() == codigoInvitacion) {
+                partida = partidaActual;
+            }
+        }
+        return partida;
+    }
+
     public ServidorPartidaRMI() {
         this.partidasActuales = new ArrayList<>();
     }

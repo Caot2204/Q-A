@@ -1,9 +1,9 @@
 package mx.fei.qa.interfazgrafica;
 
+import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.stage.Stage;
-import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,7 +19,7 @@ public class QA extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal", "VPrincipal.fxml", null);
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal", "Principal.fxml", null);
     }
 
     /**

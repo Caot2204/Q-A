@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.MarcadorJugadoresController">
+   <children>
+      <Button fx:id="buttonSiguiente" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#continuarJuego" prefHeight="35.0" prefWidth="95.0" text="%key.siguiente" />
+      <Label layoutX="300.0" layoutY="89.0" text="%key.marcadorJugadores">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <Button layoutX="941.0" layoutY="14.0" mnemonicParsing="false" onAction="#mostrarChat" prefHeight="35.0" prefWidth="95.0" text="%key.chat" />
+      <ListView fx:id="listViewMarcador" layoutX="300.0" layoutY="207.0" prefHeight="392.0" prefWidth="450.0" />
+   </children>
+</AnchorPane>

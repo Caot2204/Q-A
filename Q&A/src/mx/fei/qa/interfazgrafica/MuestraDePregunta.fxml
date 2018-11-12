@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,12 +8,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="mx.fei.qa.interfazgrafica.MuestraDePreguntaController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.MuestraDePreguntaController">
    <children>
-      <Label layoutX="26.0" layoutY="62.0" prefHeight="147.0" prefWidth="1000.0" text="Label" textAlignment="CENTER">
+      <Label fx:id="labelDescripcionPregunta" layoutX="26.0" layoutY="62.0" prefHeight="147.0" prefWidth="1000.0" text="Label" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
+         </font>
+      </Label>
+      <Circle fill="WHITE" layoutX="525.0" layoutY="425.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="labelContador" layoutX="496.0" layoutY="387.0" text="00">
+         <font>
+            <Font size="53.0" />
          </font>
       </Label>
    </children>

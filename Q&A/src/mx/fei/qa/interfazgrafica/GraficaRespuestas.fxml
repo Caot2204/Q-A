@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.GraficaRespuestasController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutX="526.0" layoutY="538.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutY="538.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutX="526.0" layoutY="414.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="123.0" layoutY="414.0" stroke="BLACK" strokeType="INSIDE" width="526.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="253.0" layoutX="163.0" layoutY="34.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="253.0" layoutX="348.0" layoutY="34.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="253.0" layoutX="537.0" layoutY="34.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="253.0" layoutX="709.0" layoutY="34.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
+      <Label fx:id="labelCantidadA" layoutX="196.0" layoutY="294.0" text="000">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelCantidadB" layoutX="381.0" layoutY="294.0" text="000">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelCantidadC" layoutX="570.0" layoutY="294.0" text="000">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelCantidadD" layoutX="742.0" layoutY="294.0" text="000">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Button layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#desplegarMarcador" prefHeight="38.0" prefWidth="109.0" text="%key.siguiente" />
+      <Button layoutX="929.0" layoutY="15.0" mnemonicParsing="false" onAction="#mostrarChat" prefHeight="38.0" prefWidth="109.0" text="%key.chat" />
+      <ImageView fx:id="imageViewRespuestaA" fitHeight="123.0" fitWidth="178.0" layoutX="347.0" layoutY="414.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaA" layoutY="415.0" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaB" fitHeight="123.0" fitWidth="178.0" layoutX="873.0" layoutY="414.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaB" layoutX="526.0" layoutY="415.0" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaC" fitHeight="123.0" fitWidth="178.0" layoutX="347.0" layoutY="538.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaC" layoutY="539.0" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewRespuestaD" fitHeight="123.0" fitWidth="178.0" layoutX="873.0" layoutY="538.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelRespuestaD" layoutX="526.0" layoutY="539.0" prefHeight="123.0" prefWidth="351.0" text="Label">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
