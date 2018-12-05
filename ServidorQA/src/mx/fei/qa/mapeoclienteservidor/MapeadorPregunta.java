@@ -25,6 +25,10 @@ import mx.fei.qa.utileria.UtileriaCadena;
  */
 public class MapeadorPregunta {
 
+    private MapeadorPregunta() {
+        throw new IllegalStateException("Clase de utilidades para pregunta");
+    }
+
     /**
      * Convierte una PreguntaCliente proveniente del cliente a una entidad JPA
      * Respuesta en el servidor
@@ -40,8 +44,10 @@ public class MapeadorPregunta {
     public static Pregunta mapearPregunta(long idCuestionario, PreguntaCliente preguntaCliente) throws IOException {
         Pregunta preguntaEntity = new Pregunta(idCuestionario, preguntaCliente.getNumero());
 
-        if (UtileriaCadena.validarCadena(preguntaCliente.getDescripcion(), 1, 300)) {
-            preguntaEntity.setDescripcion(preguntaCliente.getDescripcion());
+        if (preguntaCliente.getDescripcion() != null) {
+            if (UtileriaCadena.validarCadena(preguntaCliente.getDescripcion(), 1, 300)) {
+                preguntaEntity.setDescripcion(preguntaCliente.getDescripcion());
+            }
         }
 
         if (preguntaCliente.getImagen() != null) {
@@ -62,8 +68,8 @@ public class MapeadorPregunta {
      * Cuestionario
      * @return Lista de Entidades JPA Pregunta
      */
-    public static ArrayList<Pregunta> mapearPreguntas(long idCuestionario, ArrayList<PreguntaCliente> preguntasDeCuestionario) {
-        ArrayList<Pregunta> preguntasEntity = new ArrayList<>();
+    public static List<Pregunta> mapearPreguntas(long idCuestionario, List<PreguntaCliente> preguntasDeCuestionario) {
+        List<Pregunta> preguntasEntity = new ArrayList<>();
         for (PreguntaCliente preguntaCliente : preguntasDeCuestionario) {
             try {
                 preguntasEntity.add(mapearPregunta(idCuestionario, preguntaCliente));
@@ -87,8 +93,8 @@ public class MapeadorPregunta {
      * Respuestas desde la base de datos
      * @return Lista de PreguntaCliente
      */
-    public static ArrayList<PreguntaCliente> mapearAPreguntasCliente(long idCuestionario, List<Pregunta> preguntasEntity, RespuestaJpaController controladorRespuesta) {
-        ArrayList<PreguntaCliente> preguntasCliente = new ArrayList<>();
+    public static List<PreguntaCliente> mapearAPreguntasCliente(long idCuestionario, List<Pregunta> preguntasEntity, RespuestaJpaController controladorRespuesta) {
+        List<PreguntaCliente> preguntasCliente = new ArrayList<>();
 
         for (Pregunta preguntaEntity : preguntasEntity) {
             PreguntaCliente preguntaCliente = new PreguntaCliente();

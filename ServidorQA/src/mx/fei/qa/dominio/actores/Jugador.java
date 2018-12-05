@@ -17,10 +17,6 @@ public class Jugador implements Serializable {
     
     private String nombre;
     private byte[] fotoPerfil;
-    
-    public Jugador() {
-        
-    }
 
     public String getNombre() {
         return nombre;

@@ -32,6 +32,19 @@ public class AdministradorSesionActual {
     }
 
     /**
+     * Verifica si existe una sesión de usuario iniciada en el sistema.
+     *
+     * @return True si hay una sesión iniciada, False si no la hay
+     */
+    public boolean existeSesionIniciada() {
+        boolean existeSesion = false;
+        if (sesionUsuario != null) {
+            existeSesion = true;
+        }
+        return existeSesion;
+    }
+
+    /**
      *
      * @return Nombre del usuario de la sesión actual en el cliente
      */
@@ -47,14 +60,25 @@ public class AdministradorSesionActual {
         return this.sesionUsuario.getUsuario().getCorreo();
     }
 
+    /**
+     *
+     * @param sesionUsuario Sesion actual del usuario
+     */
     public void setSesionUsuario(SesionUsuario sesionUsuario) {
         this.sesionUsuario = sesionUsuario;
     }
 
+    /**
+     *
+     * @return Sesión actual del usuario
+     */
     public SesionUsuario getSesionUsuario() {
         return sesionUsuario;
     }
 
+    /**
+     * Elimina la sesión actual de usuario.
+     */
     public void removerSesionActual() {
         this.sesionUsuario = null;
     }

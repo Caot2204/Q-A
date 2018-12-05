@@ -40,7 +40,7 @@ public class ServidorCuestionarioRMITest {
         crearYAgregarCuartaPregunta();
         crearYAgregarQuintaPregunta();
 
-        cuestionario.setAutor("Caot");
+        cuestionario.setAutor("caot2204");
         cuestionario.setNombre("Días festivos en México");
         cuestionario.setPreguntas(preguntas);
         cuestionario.setUltimoGanador(null);

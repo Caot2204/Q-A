@@ -15,9 +15,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -32,6 +35,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.xml.bind.DatatypeConverter;
 import mx.fei.qa.comunicacion.interfaz.PartidaInterface;
 import mx.fei.qa.dominio.cuestionario.PreguntaCliente;
 import mx.fei.qa.dominio.cuestionario.RespuestaCliente;
@@ -72,6 +76,8 @@ public class MonitorPartida {
                 monitor = new MonitorPartida();
             } catch (URISyntaxException ex) {
                 Logger.getLogger(MonitorPartida.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(MonitorPartida.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return monitor;
@@ -83,8 +89,10 @@ public class MonitorPartida {
      *
      * @throws URISyntaxException
      */
-    private MonitorPartida() throws URISyntaxException {
-        socket = IO.socket("http://localhost:5000");
+    private MonitorPartida() throws URISyntaxException, RemoteException {
+        ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+        String ipServidorEscogido = propiedadesCliente.getString("key.ipServidor1");
+        socket = IO.socket("http://" + ipServidorEscogido + ":5000");
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -228,10 +236,7 @@ public class MonitorPartida {
         try {
             partida = stubPartida.recuperarPartida(codigoInvitacion);
             preguntaActual = partida.obtenerPrimerPregunta();
-
-            JSONObject pregunta = new JSONObject();
-            pregunta.put("descripcion", preguntaActual.getDescripcion());
-            pregunta.put("imagen", preguntaActual.getImagen());
+            JSONObject pregunta = convertirPreguntaAJSONObject(preguntaActual);
             socket.emit("comenzarPartida", codigoInvitacion, pregunta);
 
             Locale locale = Locale.getDefault();
@@ -274,10 +279,9 @@ public class MonitorPartida {
      * responderla.
      */
     public void enviarPreguntaAJugadores() throws IndexOutOfBoundsException {
+        partida.getGraficaPreguntaActual().reestablecerValores();
         preguntaActual = partida.obtenerSiguientePregunta();
-        JSONObject pregunta = new JSONObject();
-        pregunta.put("descripcion", preguntaActual.getDescripcion());
-        pregunta.put("imagen", preguntaActual.getImagen());
+        JSONObject pregunta = convertirPreguntaAJSONObject(preguntaActual);
         socket.emit("enviarSiguientePregunta", codigoInvitacion, pregunta);
 
         Locale locale = Locale.getDefault();
@@ -303,20 +307,11 @@ public class MonitorPartida {
      * partida.
      */
     public void enviarRespuestasAJugadores() {
-        ArrayList<RespuestaCliente> respuestasCliente = partida.obtenerRespuestasPreguntaActual();
+        List<RespuestaCliente> respuestasCliente = partida.obtenerRespuestasPreguntaActual();
         JSONObject preguntaConRespuestas = new JSONObject();
-        JSONArray respuestas = new JSONArray();
-        respuestasCliente.forEach((respuestaCliente) -> {
-            JSONObject respuesta = new JSONObject();
-            String letra = String.valueOf(respuestaCliente.getLetra());
-            respuesta.put("letra", letra);
-            respuesta.put("descripcion", respuestaCliente.getDescripcion());
-            respuesta.put("imagen", respuestaCliente.getImagen());
-            respuesta.put("esCorrecta", respuestaCliente.isEsCorrecta());
-            respuestas.put(respuesta);
-        });
-        preguntaConRespuestas.put("descripcionPregunta", preguntaActual.getDescripcion());
-        preguntaConRespuestas.put("imagenPregunta", preguntaActual.getImagen());
+        JSONObject pregunta = convertirPreguntaAJSONObject(preguntaActual);
+        JSONArray respuestas = convertirRespuestasAJSONArray(respuestasCliente);
+        preguntaConRespuestas.put("pregunta", pregunta);
         preguntaConRespuestas.put("respuestas", respuestas);
         socket.emit("enviarRespuestasDePregunta", codigoInvitacion, preguntaConRespuestas);
     }
@@ -423,6 +418,25 @@ public class MonitorPartida {
      */
     public void actualizarChat(MensajeChat mensaje) {
         partida.actualizarChat(mensaje);
+        Locale locale = Locale.getDefault();
+        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("Chat.fxml"), recursoIdioma);
+        try {
+            ChatController pantallaChat = cargadorFXML.getController();
+
+            if (pantallaChat != null) {
+                pantallaChat.actualizarChat();
+            } else {
+                Parent padre = cargadorFXML.load();
+                Stage escenario = new Stage();
+                escenario.setScene(new Scene(padre));
+                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setResizable(false);
+                escenario.show();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(JugadorPartida.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -434,7 +448,7 @@ public class MonitorPartida {
         JSONObject mensajeAEnviar = new JSONObject();
         mensajeAEnviar.put("jugador", mensaje.getNombreJugador());
         mensajeAEnviar.put("mensaje", mensaje.getMensaje());
-        socket.emit("enviarMensajeChat", mensajeAEnviar);
+        socket.emit("enviarMensajeChat", codigoInvitacion, mensajeAEnviar);
         actualizarChat(mensaje);
     }
 
@@ -452,6 +466,50 @@ public class MonitorPartida {
             chatParaIU.add(mensaje.getNombreJugador() + ": " + mensaje.getMensaje());
         }
         return chatParaIU;
+    }
+
+    /**
+     * Mapea la pregunta actual a un objeto capaz de ser enviado por la red.
+     *
+     * @param preguntaCliente Pregunta actual
+     * @return JSONObject
+     */
+    private JSONObject convertirPreguntaAJSONObject(PreguntaCliente preguntaCliente) {        
+        JSONObject pregunta = new JSONObject();
+        if (preguntaCliente.getDescripcion() != null) {
+            pregunta.put("descripcion", preguntaCliente.getDescripcion());
+        }
+        if (preguntaCliente.getImagen() != null) {
+            String imagenCodificada = DatatypeConverter.printBase64Binary(preguntaCliente.getImagen());
+            pregunta.put("imagen", imagenCodificada);
+        }
+        return pregunta;
+    }
+
+    /**
+     * Mapea las respuestas de una pregunta a un array capaz de ser enviado por
+     * la red.
+     *
+     * @param respuestasCliente Respuestas a la pregunta actual
+     * @return JSONArray
+     */
+    private JSONArray convertirRespuestasAJSONArray(List<RespuestaCliente> respuestasCliente) {
+        JSONArray respuestas = new JSONArray();
+        respuestasCliente.forEach((RespuestaCliente respuestaCliente) -> {
+            JSONObject respuesta = new JSONObject();
+            String letra = String.valueOf(respuestaCliente.getLetra());
+            respuesta.put("letra", letra);
+            respuesta.put("esCorrecta", respuestaCliente.isEsCorrecta());
+            if (respuestaCliente.getDescripcion() != null) {
+                respuesta.put("descripcion", respuestaCliente.getDescripcion());
+            }
+            if (respuestaCliente.getImagen() != null) {
+                String imagenCodificada = DatatypeConverter.printBase64Binary(respuestaCliente.getImagen());
+                respuesta.put("imagen", imagenCodificada);
+            }
+            respuestas.put(respuesta);
+        });
+        return respuestas;
     }
 
 }

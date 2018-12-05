@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane prefHeight="650.0" prefWidth="1184.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.RegistroCuestionarioController">
+   <content>
+      <AnchorPane id="AnchorPane" prefHeight="877.0" prefWidth="1169.0">
+         <children>
+            <TitledPane layoutX="14.0" layoutY="43.0" prefHeight="98.0" prefWidth="882.0" text="%key.tituloCuestionario">
+               <content>
+                  <AnchorPane prefHeight="88.0" prefWidth="455.0">
+                     <children>
+                        <TextField fx:id="textFieldNombreCuestionario" layoutX="25.0" layoutY="43.0" prefHeight="25.0" prefWidth="833.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <TitledPane layoutX="14.0" layoutY="161.0" prefHeight="154.0" prefWidth="882.0" text="%key.instruccionPregunta">
+               <content>
+                  <AnchorPane prefHeight="174.0" prefWidth="474.0">
+                     <children>
+                        <TextField fx:id="textFieldPregunta" layoutX="28.0" layoutY="52.0" prefHeight="25.0" prefWidth="597.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" layoutX="652.0" layoutY="25.0" stroke="BLACK" strokeType="INSIDE" width="87.0" />
+                        <ImageView fx:id="imageViewPregunta" fitHeight="62.0" fitWidth="72.0" layoutX="660.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="buttonImagenPregunta" layoutX="749.0" layoutY="78.0" mnemonicParsing="false" onAction="#seleccionarImagenPregunta" text="%key.subirImagen" />
+                        <Button layoutX="206.0" layoutY="91.0" mnemonicParsing="false" onAction="#eliminarPregunta" prefHeight="25.0" prefWidth="242.0" text="%key.eliminarPreguntaConRespuestas" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <TitledPane layoutX="14.0" layoutY="332.0" prefHeight="479.0" prefWidth="882.0" text="%key.instruccionRespuestas">
+               <content>
+                  <AnchorPane prefHeight="287.0" prefWidth="880.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="194.0" layoutX="14.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="410.0" />
+                        <TextField fx:id="textFieldRespuestaA" layoutX="34.0" layoutY="57.0" prefHeight="25.0" prefWidth="370.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" layoutX="49.0" layoutY="111.0" stroke="BLACK" strokeType="INSIDE" width="87.0" />
+                        <Button fx:id="buttonImagenRespuestaA" layoutX="152.0" layoutY="166.0" mnemonicParsing="false" onAction="#seleccionarImagenRespuestaA" text="%key.subirImagen" />
+                        <ImageView fx:id="imageViewRespuestaA" fitHeight="62.0" fitWidth="72.0" layoutX="57.0" layoutY="120.0" pickOnBounds="true" preserveRatio="true" />
+                        <RadioButton fx:id="radioButtonRespuestaA" layoutX="377.0" layoutY="170.0" mnemonicParsing="false" />
+                        <Label fx:id="labelRespuestaA" layoutX="35.0" layoutY="24.0" prefHeight="21.0" prefWidth="62.0" text="A" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="194.0" layoutX="450.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="410.0" />
+                        <Label fx:id="labelRespuestaB" layoutX="472.0" layoutY="24.0" prefHeight="21.0" prefWidth="62.0" text="B" />
+                        <TextField fx:id="textFieldRespuestaB" layoutX="470.0" layoutY="57.0" prefHeight="25.0" prefWidth="370.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" layoutX="491.0" layoutY="111.0" stroke="BLACK" strokeType="INSIDE" width="87.0" />
+                        <ImageView fx:id="imageViewRespuestaB" fitHeight="62.0" fitWidth="72.0" layoutX="499.0" layoutY="120.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="buttonImagenRespuestaB" layoutX="603.0" layoutY="166.0" mnemonicParsing="false" onAction="#seleccionarImagenRespuestaB" text="%key.subirImagen" />
+                        <RadioButton fx:id="radioButtonRespuestaB" layoutX="819.0" layoutY="170.0" mnemonicParsing="false" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="194.0" layoutX="14.0" layoutY="227.0" stroke="BLACK" strokeType="INSIDE" width="410.0" />
+                        <Label fx:id="labelRespuestaC" layoutX="35.0" layoutY="238.0" prefHeight="21.0" prefWidth="62.0" text="C" />
+                        <TextField fx:id="textFieldRespuestaC" layoutX="34.0" layoutY="270.0" prefHeight="25.0" prefWidth="370.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" layoutX="50.0" layoutY="324.0" stroke="BLACK" strokeType="INSIDE" width="87.0" />
+                        <Button fx:id="buttonImagenRespuestaC" layoutX="152.0" layoutY="379.0" mnemonicParsing="false" onAction="#seleccionarImagenRespuestaC" text="%key.subirImagen" />
+                        <RadioButton fx:id="radioButtonRespuestaC" layoutX="377.0" layoutY="383.0" mnemonicParsing="false" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="194.0" layoutX="450.0" layoutY="227.0" stroke="BLACK" strokeType="INSIDE" width="410.0" />
+                        <Label fx:id="labelRespuestaD" layoutX="472.0" layoutY="238.0" prefHeight="21.0" prefWidth="62.0" text="D" />
+                        <TextField fx:id="textFieldRespuestaD" layoutX="470.0" layoutY="270.0" prefHeight="25.0" prefWidth="370.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" layoutX="492.0" layoutY="324.0" stroke="BLACK" strokeType="INSIDE" width="87.0" />
+                        <ImageView fx:id="imageViewRespuestaD" fitHeight="62.0" fitWidth="72.0" layoutX="500.0" layoutY="333.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="buttonImagenRespuestaD" layoutX="603.0" layoutY="379.0" mnemonicParsing="false" onAction="#seleccionarImagenRespuestaD" text="%key.subirImagen" />
+                        <RadioButton fx:id="radioButtonRespuestaD" layoutX="819.0" layoutY="383.0" mnemonicParsing="false" />
+                        <ImageView fx:id="imageViewRespuestaC" fitHeight="62.0" fitWidth="72.0" layoutX="57.0" layoutY="333.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <Button layoutX="204.0" layoutY="819.0" mnemonicParsing="false" onAction="#guardarPregunta" prefHeight="48.0" prefWidth="158.0" text="%key.guardarPregunta" />
+            <Button layoutX="1004.0" layoutY="819.0" mnemonicParsing="false" onAction="#guardarCuestionario" prefHeight="48.0" prefWidth="151.0" text="%key.guardarCuestionario" />
+            <ListView fx:id="listViewPreguntasRegistradas" layoutX="916.0" layoutY="74.0" onMouseClicked="#editarPregunta" prefHeight="733.0" prefWidth="235.0" />
+            <Button layoutX="896.0" layoutY="819.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="48.0" prefWidth="98.0" text="%key.cancelar" />
+            <Label fx:id="labelPreguntasRegistradas" layoutX="916.0" layoutY="43.0" prefHeight="17.0" prefWidth="235.0" text="%key.preguntasRegistradas">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button layoutX="14.0" layoutY="819.0" mnemonicParsing="false" onAction="#limpiarCampos" prefHeight="48.0" prefWidth="165.0" text="%key.limpiarCampos" />
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>

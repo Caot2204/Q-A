@@ -5,19 +5,27 @@
  */
 package mx.fei.qa.comunicacion.interfaz;
 
-import mx.fei.qa.dominio.cuestionario.CuestionarioCliente;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.List;
+import mx.fei.qa.dominio.cuestionario.CuestionarioCliente;
 
 /**
+ * Métodos para el objeto RMI encargado de la administración de los
+ * Cuestionarios
  *
+ * @version 1.0 28 Oct 2018
  * @author Carlos Onorio
  */
-public interface CuestionarioInterface extends Remote{
+public interface CuestionarioInterface extends Remote {
+
     public boolean guardarCuestionario(CuestionarioCliente cuestionario) throws RemoteException;
+
     public CuestionarioCliente recuperarCuestionario(String autor, String nombreCuestionario) throws RemoteException;
-    public ArrayList<CuestionarioCliente> recuperarCuestionariosPorAutor(String autor) throws RemoteException;
+
+    public List<CuestionarioCliente> recuperarCuestionariosPorAutor(String autor) throws RemoteException;
+
     public boolean editarCuestionario(CuestionarioCliente cuestionario) throws RemoteException;
-    public boolean eliminarCuestionario(long id) throws RemoteException; 
+
+    public boolean eliminarCuestionario(String autor, String nombreCuestionario) throws RemoteException;
 }

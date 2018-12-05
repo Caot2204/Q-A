@@ -5,26 +5,36 @@
  */
 package mx.fei.qa.interfazgrafica;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import mx.fei.qa.comunicacion.interfaz.CuentaUsuarioInterface;
 import mx.fei.qa.comunicacion.interfaz.CuestionarioInterface;
 import mx.fei.qa.dominio.actores.UsuarioCliente;
@@ -63,7 +73,7 @@ public class DashboardQAController implements Initializable {
     private AdministradorSesionActual administradorSesion;
     private CuentaUsuarioInterface stubCuentaUsuario;
     private CuestionarioInterface stubCuestionario;
-    private ArrayList<CuestionarioCliente> cuestionariosRegistrados;
+    private List<CuestionarioCliente> cuestionariosRegistrados;
     private ObservableList<AdaptadorCuestionario> cuestionariosParaTableView;
 
     /**
@@ -82,28 +92,62 @@ public class DashboardQAController implements Initializable {
         }
 
         UsuarioCliente usuarioActual = administradorSesion.getSesionUsuario().getUsuario();
-        Image fotoPerfil;
 
         labelNombreUsuario.setText(usuarioActual.getNombre());
-        /*if (usuarioActual.getFotoPerfil() != null) {
-            try {
-                File file = File.createTempFile("fto", ".tmp");
-                FileOutputStream stream = new FileOutputStream(file.getAbsolutePath());
-                stream.write(usuarioActual.getFotoPerfil());
-                stream.close();
-                fotoPerfil = new Image("file:" + file.getAbsolutePath());
-                imageViewFotoPerfil.setImage(fotoPerfil);
-            } catch (IOException ex) {
-                Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
+        labelNombreUsuario.setAlignment(Pos.CENTER_RIGHT);
+        try {
+            File imagenPerfil = new File("imagenPerfil");
+            FileOutputStream fileOutputStream = new FileOutputStream(imagenPerfil);
+            fileOutputStream.write(usuarioActual.getFotoPerfil());
+            fileOutputStream.close();
+
+            Image imagen = new Image("file:" + imagenPerfil.getAbsolutePath());
+            imageViewFotoPerfil.setImage(imagen);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         mostrarCuestionarios();
     }
 
     /**
+     * Muestra la ventana para registrar un nuevo cuestionario.
+     */
+    public void crearCuestionario() {
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.cuestionario",
+                "RegistroCuestionario.fxml", labelNombreUsuario);
+    }
+
+    /**
+     * Muestra la ventana para editar el cuestionario seleccionado.
+     */
+    public void editarCuestionario() {
+        int cuestionarioSeleccionado = tableViewCuestionarios.getSelectionModel().getSelectedIndex();
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
+        FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("RegistroCuestionario.fxml"), recursoIdioma);
+        try {
+            Parent padre = cargadorFXML.load();
+            RegistroCuestionarioController pantallaCuestionario = cargadorFXML.getController();
+            pantallaCuestionario.establecerCuestionarioAEditar(cuestionariosRegistrados.get(cuestionarioSeleccionado));
+
+            Stage escenario = new Stage();
+            escenario.setScene(new Scene(padre));
+            escenario.setTitle(recursoIdioma.getString("key.cuestionario"));
+            escenario.setResizable(false);
+            escenario.show();
+
+            Stage escenarioActual = (Stage) tableViewCuestionarios.getScene().getWindow();
+            escenarioActual.close();
+        } catch (IOException ex) {
+            Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
      * Inicializa una nueva partida para un cuestionario para que el usuario la
-     * monitore
+     * monitoree.
      */
     public void jugarCuestionario() {
         int posicionCuestionarioSeleccionado = tableViewCuestionarios.getSelectionModel().getSelectedIndex();
@@ -119,8 +163,13 @@ public class DashboardQAController implements Initializable {
         }
     }
 
-    public void editarCuentaUsuario() {
-
+    /**
+     * Despliega la IU para editar los datos cuenta del usuario o el
+     * idioma del cliente.
+     */
+    public void editarPreferencias() {
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.editarPreferencias",
+                "PreferenciaJuego.fxml", labelNombreUsuario);
     }
 
     /**

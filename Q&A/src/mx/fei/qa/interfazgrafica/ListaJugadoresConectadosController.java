@@ -6,14 +6,12 @@
 package mx.fei.qa.interfazgrafica;
 
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 
 /**
@@ -27,13 +25,7 @@ public class ListaJugadoresConectadosController implements Initializable {
     private AnchorPane panel;
 
     @FXML
-    private ListView listViewIzquierda;
-
-    @FXML
-    private ListView listViewCentro;
-
-    @FXML
-    private ListView listViewDerecha;
+    private ListView listViewJugadoresConectados;
 
     @FXML
     private Button buttonEmpezarJuego;
@@ -58,7 +50,7 @@ public class ListaJugadoresConectadosController implements Initializable {
      */
     public void empezarJuego() {
         monitorPartida.empezarJuego();
-        UtileriaInterfazUsuario.cerrarVentanaMedianteElementoFX(listViewCentro);
+        UtileriaInterfazUsuario.cerrarVentanaMedianteElementoFX(listViewJugadoresConectados);
     }
 
 }

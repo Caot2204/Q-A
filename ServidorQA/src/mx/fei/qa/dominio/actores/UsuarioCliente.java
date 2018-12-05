@@ -6,28 +6,27 @@
 package mx.fei.qa.dominio.actores;
 
 import java.io.Serializable;
+import mx.fei.qa.utileria.UtileriaCadena;
 
 /**
  *
  * @author Carlos Onorio
  */
 public class UsuarioCliente implements Serializable {
-    
+
     private String nombre;
     private String correo;
     private String contrasenia;
     private byte[] fotoPerfil;
-
-    public UsuarioCliente() {
-        
-    }
 
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (UtileriaCadena.validarCadena(nombre, 1, 150)) {
+            this.nombre = nombre;
+        }
     }
 
     public String getCorreo() {
@@ -35,15 +34,19 @@ public class UsuarioCliente implements Serializable {
     }
 
     public void setCorreo(String correo) {
-        this.correo = correo;
+        if (UtileriaCadena.validarCadena(correo, 1, 150)) {
+            this.correo = correo;
+        }
     }
-    
+
     public String getContrasenia() {
         return contrasenia;
     }
 
     public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+        if (UtileriaCadena.validarCadena(contrasenia, 1, 100)) {
+            this.contrasenia = contrasenia;
+        }
     }
 
     public byte[] getFotoPerfil() {
@@ -53,5 +56,5 @@ public class UsuarioCliente implements Serializable {
     public void setFotoPerfil(byte[] fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
     }
-    
+
 }

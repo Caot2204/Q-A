@@ -257,5 +257,18 @@ public class CuestionarioJpaController implements Serializable {
         consulta.setParameter("autor", autor);
         return consulta.getResultList();
     }
+    
+    public boolean eliminarCuestionario(long idCuestionario) {
+        boolean eliminadoCorrecto = false;
+        EntityManager entityManager = getEntityManager();
+        entityManager.getTransaction().begin();
+        Query consulta = entityManager.createNamedQuery("Cuestionario.eliminarCuestionario");
+        consulta.setParameter("id", idCuestionario);
+        if (consulta.executeUpdate() == 1) {
+            entityManager.getTransaction().commit();
+            eliminadoCorrecto = true;
+        }
+        return eliminadoCorrecto;
+    }
 
 }

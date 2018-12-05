@@ -6,7 +6,7 @@
 package mx.fei.qa.dominio.cuestionario;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,11 +17,7 @@ public class PreguntaCliente implements Serializable {
     private int numero;
     private String descripcion;
     private byte[] imagen;
-    private ArrayList<RespuestaCliente> respuestas;
-
-    public PreguntaCliente() {
-        
-    }
+    private List<RespuestaCliente> respuestas;
 
     public int getNumero() {
         return numero;
@@ -47,11 +43,11 @@ public class PreguntaCliente implements Serializable {
         this.imagen = imagen;
     }
 
-    public ArrayList<RespuestaCliente> getRespuestas() {
+    public List<RespuestaCliente> getRespuestas() {
         return respuestas;
     }
 
-    public void setRespuestas(ArrayList<RespuestaCliente> respuestas) {
+    public void setRespuestas(List<RespuestaCliente> respuestas) {
         this.respuestas = respuestas;
     }
     

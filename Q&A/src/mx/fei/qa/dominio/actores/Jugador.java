@@ -9,18 +9,14 @@ import java.io.Serializable;
 
 /**
  * Jugador de una partida de un cuestionario
- *
+ * 
  * @version 1.0 29 Oct 2018
  * @author Carlos Onorio
  */
 public class Jugador implements Serializable {
-
+    
     private String nombre;
     private byte[] fotoPerfil;
-
-    public Jugador() {
-
-    }
 
     public String getNombre() {
         return nombre;
@@ -37,5 +33,5 @@ public class Jugador implements Serializable {
     public void setFotoPerfil(byte[] fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
     }
-
+    
 }

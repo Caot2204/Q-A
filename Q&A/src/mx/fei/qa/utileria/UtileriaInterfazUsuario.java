@@ -39,8 +39,7 @@ public class UtileriaInterfazUsuario {
      * ventana actual
      */
     public static void mostrarVentana(Class clase, String llaveTitulo, String nombreFXML, Control elementoInterfaz) {
-        Locale locale = Locale.getDefault();
-        recurso = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        recurso = recuperarRecursoIdiomaCliente();
         String titulo = recurso.getString(llaveTitulo);
         try {
             Parent root = FXMLLoader.load(clase.getResource(nombreFXML), recurso);
@@ -57,6 +56,24 @@ public class UtileriaInterfazUsuario {
         } catch (IOException ex) {
             Logger.getLogger(UtileriaInterfazUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Recupera los recursos del idioma que el usuario eligió para su cliente.
+     *
+     * @return ResourceBundle con los recursos del idioma definido por el
+     * usuario
+     */
+    public static ResourceBundle recuperarRecursoIdiomaCliente() {
+        ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+        String idiomaJuego = propiedadesCliente.getString("key.idioma");
+        Locale locale = null;
+        if (idiomaJuego.equals("Español")) {
+            locale = new Locale("es", "MX");
+        } else if (idiomaJuego.equals("English")) {
+            locale = new Locale("en", "US");
+        }
+        return ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
     }
 
     /**
@@ -130,7 +147,7 @@ public class UtileriaInterfazUsuario {
         } else {
             mensaje = recurso.getString(llaveMensaje);
         }
-        
+
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
         alerta.setTitle(titulo);
         alerta.setHeaderText(encabezado);

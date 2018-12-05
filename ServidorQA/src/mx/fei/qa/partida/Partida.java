@@ -7,6 +7,7 @@ package mx.fei.qa.partida;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import mx.fei.qa.dominio.actores.Jugador;
 import mx.fei.qa.dominio.cuestionario.CuestionarioCliente;
@@ -138,7 +139,7 @@ public class Partida implements Serializable {
      *
      * @return Conjunto de RespuestaCliente a la PreguntaCliente
      */
-    public ArrayList<RespuestaCliente> obtenerRespuestasPreguntaActual() {
+    public List<RespuestaCliente> obtenerRespuestasPreguntaActual() {
         return cuestionario.getPreguntas().get(preguntaActual).getRespuestas();
     }
 

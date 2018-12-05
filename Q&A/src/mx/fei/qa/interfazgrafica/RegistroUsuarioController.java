@@ -9,13 +9,13 @@ import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 import mx.fei.qa.comunicacion.interfaz.CuentaUsuarioInterface;
 import mx.fei.qa.dominio.actores.UsuarioCliente;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,9 +58,12 @@ public class RegistroUsuarioController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
     }
 
+    /**
+     * Carga una imagen para la foto de perfil del usuario.
+     */
     public void subirFotoPerfil() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Escoja una imagen");
@@ -71,11 +74,15 @@ public class RegistroUsuarioController implements Initializable {
                 fotoPerfilParaImageView = new Image("file:" + archivoFotoPerfil.getAbsolutePath());
                 imageViewFotoPerfil.setImage(fotoPerfilParaImageView);
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.archivoInvalido", "key.soloImagen", "key.escojaImagenCorrecta");
+                UtileriaInterfazUsuario.mostrarMensajeError("key.archivoInvalido",
+                        "key.soloImagen", "key.escojaImagenCorrecta");
             }
         }
     }
 
+    /**
+     * Almacena el usuario registrado si los campos son válidos.
+     */
     public void finalizarRegistro() {
         UsuarioCliente usuario;
 
@@ -85,22 +92,27 @@ public class RegistroUsuarioController implements Initializable {
             usuario.setCorreo(correo);
             usuario.setContrasenia(contrasenia);
             if (archivoFotoPerfil != null) {
-                usuario.setFotoPerfil(archivoFotoPerfil.getAbsolutePath().getBytes());
+                try {
+                    usuario.setFotoPerfil(Files.readAllBytes(archivoFotoPerfil.toPath()));
+                } catch (IOException ex) {
+                    Logger.getLogger(RegistroUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 usuario.setFotoPerfil(null);
             }
             try {
-
-                Registry registro = LocateRegistry.getRegistry();
+                ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+                Registry registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
                 CuentaUsuarioInterface stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
-                stub.guardarUsuario(usuario);
-
                 AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
+                stub.guardarUsuario(usuario);
                 administradorSesion.setSesionUsuario(stub.iniciarSesion(nombreUsuario, contrasenia));
-                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard", "VDashboardQA.fxml", textFieldNombreUsuario);
+                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard",
+                        "DashboardQA.fxml", textFieldNombreUsuario);
 
             } catch (IllegalArgumentException excepcion) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.errorGuardarDatos", "key.errorCrearCuenta", "key.nombreUsuarioExistente");
+                UtileriaInterfazUsuario.mostrarMensajeError("key.errorGuardarDatos",
+                        "key.errorCrearCuenta", "key.nombreUsuarioExistente");
             } catch (RemoteException | NotBoundException ex) {
                 Logger.getLogger(RegistroUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -108,10 +120,20 @@ public class RegistroUsuarioController implements Initializable {
 
     }
 
+    /**
+     * Descarta los datos ingresados y despliega la pantalla Principal.
+     */
     public void cancelarRegistro() {
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal", "VPrincipal.fxml", textFieldNombreUsuario);
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.principal",
+                "Principal.fxml", textFieldNombreUsuario);
     }
 
+    /**
+     * Verifica que se han ingresados todos los campos y que estos sean válidos.
+     *
+     * @return True si los campos han sido ingresados y son válidos, False si no
+     * es así
+     */
     private boolean validarCampos() {
         boolean camposValidos = true;
         nombreUsuario = textFieldNombreUsuario.getText();
@@ -122,9 +144,12 @@ public class RegistroUsuarioController implements Initializable {
             UtileriaCadena.validarCadena(nombreUsuario, 1, 150);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueNombreUsuario", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                        "key.modifiqueNombreUsuario",
+                        UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueNombreUsuario", excepcion.getMessage());
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                        "key.modifiqueNombreUsuario", excepcion.getMessage());
             }
             textFieldNombreUsuario.requestFocus();
             camposValidos = false;
@@ -134,9 +159,12 @@ public class RegistroUsuarioController implements Initializable {
             UtileriaCadena.validarCadena(correo, 1, 150);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueEmail", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                        "key.modifiqueEmail",
+                        UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueEmail", excepcion.getMessage());
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                        "key.modifiqueEmail", excepcion.getMessage());
             }
             textFieldCorreo.requestFocus();
             camposValidos = false;
@@ -146,9 +174,12 @@ public class RegistroUsuarioController implements Initializable {
             UtileriaCadena.validarCadena(contrasenia, 1, 100);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueContrasenia", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                        "key.modifiqueContrasenia",
+                        UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueContrasenia", excepcion.getMessage());
+                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                        "key.modifiqueContrasenia", excepcion.getMessage());
             }
             textFieldContrasenia.requestFocus();
             camposValidos = false;

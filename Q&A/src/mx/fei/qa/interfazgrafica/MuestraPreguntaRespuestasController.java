@@ -5,15 +5,22 @@
  */
 package mx.fei.qa.interfazgrafica;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import mx.fei.qa.dominio.cuestionario.PreguntaCliente;
 import mx.fei.qa.dominio.cuestionario.RespuestaCliente;
@@ -108,10 +115,113 @@ public class MuestraPreguntaRespuestasController implements Initializable {
 
         labelPregunta.setText(pregunta.getDescripcion());
         labelPregunta.setAlignment(Pos.CENTER);
+        if (pregunta.getImagen() != null) {
+            try {
+                File imagenPerfil = new File("imagenPregunta");
+                FileOutputStream fileOutputStream = new FileOutputStream(imagenPerfil);
+                fileOutputStream.write(pregunta.getImagen());
+                fileOutputStream.close();
+
+                Image imagen = new Image("file:" + imagenPerfil.getAbsolutePath());
+                imageViewPregunta.setImage(imagen);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        desplegarRespuestaA();
+        desplegarRespuestaB();
+        desplegarRespuestaC();
+        desplegarRespuestaD();
+    }
+
+    /**
+     * Muestra en la IU los datos de la respuesta A de la pregunta actual.
+     */
+    private void desplegarRespuestaA() {
         labelRespuestaA.setText(respuestaA.getDescripcion());
+        if (respuestaA.getImagen() != null) {
+            try {
+                File imagenRespuestaA = new File("imagenRespuesta");
+                FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaA);
+                fileOutputStream.write(respuestaA.getImagen());
+                fileOutputStream.close();
+
+                Image imagen = new Image("file:" + imagenRespuestaA.getAbsolutePath());
+                imageViewRespuestaA.setImage(imagen);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Muestra en la IU los datos de la respuesta B de la pregunta actual.
+     */
+    private void desplegarRespuestaB() {
         labelRespuestaB.setText(respuestaB.getDescripcion());
+        if (respuestaB.getImagen() != null) {
+            try {
+                File imagenRespuestaB = new File("imagenRespuesta");
+                FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaB);
+                fileOutputStream.write(respuestaB.getImagen());
+                fileOutputStream.close();
+
+                Image imagen = new Image("file:" + imagenRespuestaB.getAbsolutePath());
+                imageViewRespuestaB.setImage(imagen);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Muestra en la IU los datos de la respuesta C de la pregunta actual.
+     */
+    private void desplegarRespuestaC() {
         labelRespuestaC.setText(respuestaC.getDescripcion());
+        if (respuestaC.getImagen() != null) {
+            try {
+                File imagenRespuestaC = new File("imagenRespuesta");
+                FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaC);
+                fileOutputStream.write(respuestaC.getImagen());
+                fileOutputStream.close();
+
+                Image imagen = new Image("file:" + imagenRespuestaC.getAbsolutePath());
+                imageViewRespuestaC.setImage(imagen);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Muestra en la IU los datos de la respuesta D de la pregunta actual.
+     */
+    private void desplegarRespuestaD() {
         labelRespuestaD.setText(respuestaD.getDescripcion());
+        if (respuestaD.getImagen() != null) {
+            try {
+                File imagenRespuestaD = new File("imagenRespuesta");
+                FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaD);
+                fileOutputStream.write(respuestaD.getImagen());
+                fileOutputStream.close();
+
+                Image imagen = new Image("file:" + imagenRespuestaD.getAbsolutePath());
+                imageViewRespuestaD.setImage(imagen);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**

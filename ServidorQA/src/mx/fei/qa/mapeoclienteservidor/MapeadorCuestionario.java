@@ -23,6 +23,10 @@ import mx.fei.qa.dominio.cuestionario.CuestionarioCliente;
  */
 public class MapeadorCuestionario {
     
+    private MapeadorCuestionario() {
+        throw new IllegalStateException("Clase de utilidades para cuestionario");
+    }
+    
     /**
      * Convierte un CuestionarioCliente proveniente del cliente a una entidad Respuesta
      * en el servidor

@@ -183,5 +183,5 @@ public class PreguntaJpaController implements Serializable {
         consulta.setParameter("idCuestionario", idCuestionario);
         return consulta.getResultList();
     }
-    
+
 }

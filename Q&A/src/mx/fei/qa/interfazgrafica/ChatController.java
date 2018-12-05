@@ -42,6 +42,7 @@ public class ChatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         actualizarChat();
+        listViewChat.setItems(chatParaListView);
     }
 
     /**
@@ -54,13 +55,13 @@ public class ChatController implements Initializable {
             usuarioActual = AdministradorSesionActual.obtenerAdministrador().getNombreUsuarioActual();
             ArrayList<String> chat = monitor.getChat();
             chatParaListView = FXCollections.observableArrayList(chat);
-            listViewChat.setItems(chatParaListView);
+            listViewChat.refresh();
         } else {
             jugador = JugadorPartida.obtenerInstancia();
             usuarioActual = jugador.getPuntajeJugador().getJugador().getNombre();
             ArrayList<String> chat = jugador.getChat();
             chatParaListView = FXCollections.observableArrayList(chat);
-            listViewChat.setItems(chatParaListView);
+            listViewChat.refresh();
         }
     }
 
@@ -81,7 +82,7 @@ public class ChatController implements Initializable {
                 jugador.enviarMensajeChat(mensajeChat);
             }
         }
-        actualizarChat();
+        textFieldMensaje.clear();
     }
 
 }

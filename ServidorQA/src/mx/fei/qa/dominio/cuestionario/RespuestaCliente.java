@@ -18,10 +18,6 @@ public class RespuestaCliente implements Serializable {
     private byte[] imagen;
     private boolean esCorrecta;
 
-    public RespuestaCliente() {
-        
-    }
-
     public char getLetra() {
         return letra;
     }

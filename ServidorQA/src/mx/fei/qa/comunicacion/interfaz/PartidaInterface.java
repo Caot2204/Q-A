@@ -18,7 +18,7 @@ import mx.fei.qa.partida.Partida;
  */
 public interface PartidaInterface extends Remote {
 
-    public short crearPartida(String dueñoCuestionario, String nombreCuestionario) throws RemoteException;
+    public short crearPartida(String autorCuestionario, String nombreCuestionario) throws RemoteException;
 
     public boolean finalizarPartida(short codigoInvitacion) throws RemoteException;
 

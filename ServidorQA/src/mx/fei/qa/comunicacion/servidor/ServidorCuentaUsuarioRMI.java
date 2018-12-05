@@ -11,23 +11,26 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import mx.fei.qa.accesoadatos.controller.UsuarioJpaController;
+import mx.fei.qa.accesoadatos.controller.exceptions.IllegalOrphanException;
+import mx.fei.qa.accesoadatos.controller.exceptions.NonexistentEntityException;
 import mx.fei.qa.accesoadatos.controller.exceptions.PreexistingEntityException;
 import mx.fei.qa.accesoadatos.entity.Usuario;
 import mx.fei.qa.comunicacion.interfaz.CuentaUsuarioInterface;
 import mx.fei.qa.dominio.actores.UsuarioCliente;
 import mx.fei.qa.sesion.AdministradorSesionUsuario;
 import mx.fei.qa.sesion.SesionUsuario;
-import mx.fei.qa.utileria.UtileriaCadena;
 
 /**
  * Proceso servidor encargado de la administración de las Cuentas de Usuario así
- * como la autenticación del mismo
+ * como la autenticación del mismo.
  *
+ * @version 1.0 12 Nov 2018
  * @author Carlos Onorio
  */
 public class ServidorCuentaUsuarioRMI implements CuentaUsuarioInterface {
 
     private AdministradorSesionUsuario administradorUsuarios;
+    private final UsuarioJpaController controladorUsuario;
 
     /**
      * Registra una nueva cuenta de usuario en el sistema, validando los datos
@@ -44,51 +47,65 @@ public class ServidorCuentaUsuarioRMI implements CuentaUsuarioInterface {
      */
     @Override
     public boolean guardarUsuario(UsuarioCliente usuario) throws RemoteException {
-        Usuario usuarioNuevo;
         boolean guardadoExitoso = false;
-        String nombre = usuario.getNombre();
-        String correo = usuario.getCorreo();
-        String contrasenia = usuario.getContrasenia();
         byte[] fotoPerfil = usuario.getFotoPerfil();
 
-        if (UtileriaCadena.validarCadena(nombre, 1, 150)) {
-            if (UtileriaCadena.validarCadena(contrasenia, 1, 100)) {
-                if (UtileriaCadena.validarCadena(correo, 1, 150)) {
-                    usuarioNuevo = new Usuario();
-                    usuarioNuevo.setNombre(nombre);
-                    usuarioNuevo.setPassword(contrasenia);
-                    usuarioNuevo.setCorreo(correo);
-                    if (fotoPerfil != null) {
-                        usuarioNuevo.setFotoPerfil(fotoPerfil);
-                    } else {
-                        usuarioNuevo.setFotoPerfil(null);
-                    }
-                    EntityManagerFactory fabricaEntityManager = Persistence.createEntityManagerFactory("ServidorQAPU");
-                    UsuarioJpaController controladorUsuario = new UsuarioJpaController(fabricaEntityManager);
-                    try {
-                        controladorUsuario.create(usuarioNuevo);
-                        guardadoExitoso = true;
-                    } catch (PreexistingEntityException ex) {
-                        throw new IllegalArgumentException();
-                    } catch (Exception ex) {
-                        Logger.getLogger(ServidorCuentaUsuarioRMI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
+        Usuario usuarioNuevo = new Usuario();
+        usuarioNuevo.setNombre(usuario.getNombre());
+        usuarioNuevo.setPassword(usuario.getContrasenia());
+        usuarioNuevo.setCorreo(usuario.getCorreo());
+        
+        if (fotoPerfil != null) {
+            usuarioNuevo.setFotoPerfil(fotoPerfil);
+        } else {
+            usuarioNuevo.setFotoPerfil(null);
+        }
+        try {
+            controladorUsuario.create(usuarioNuevo);
+            guardadoExitoso = true;
+        } catch (PreexistingEntityException ex) {
+            throw new IllegalArgumentException();
+        } catch (Exception ex) {
+            Logger.getLogger(ServidorCuentaUsuarioRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return guardadoExitoso;
     }
 
+    /**
+     * Actualiza los datos de un usuario del sistema.
+     *
+     * @param usuario Datos actualizados del usuario
+     * @return True si se actualizaron correctamente los datos, False si no fué
+     * así
+     * @throws RemoteException Lanzada si ocurre algún problema en la conexión
+     * cliente-servidor
+     */
     @Override
     public boolean editarUsuario(UsuarioCliente usuario) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean editadoExitoso = false;
+        if (usuario != null) {
+            administradorUsuarios.cerrarSesion(usuario.getNombre());
+            try {
+                Usuario usuarioEntity = controladorUsuario.findUsuario(usuario.getNombre());
+                usuarioEntity.setCorreo(usuario.getCorreo());
+                usuarioEntity.setPassword(usuario.getContrasenia());
+                usuarioEntity.setFotoPerfil(usuario.getFotoPerfil());
+                controladorUsuario.edit(usuarioEntity);
+                editadoExitoso = true;
+            } catch (IllegalOrphanException | NonexistentEntityException ex) {
+                Logger.getLogger(ServidorCuentaUsuarioRMI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(ServidorCuentaUsuarioRMI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return editadoExitoso;
     }
 
     /**
      * Servicio que permite la autenticación de usuarios en el sistema. Si las
      * credenciales son válidas, devuelve un objeto SesionUsuario, si son
-     * inválidas lanza una excepcion IllegalArgumentException
+     * inválidas lanza una excepcion IllegalArgumentException.
      *
      * @param nombre Nombre de usuario ingresado desde el cliente
      * @param contrasenia Contraseña ingresada desde el cliente
@@ -111,7 +128,7 @@ public class ServidorCuentaUsuarioRMI implements CuentaUsuarioInterface {
     }
 
     /**
-     * Servicio que permite cerrar la sesión actual de un usuario en el sistema
+     * Servicio que permite cerrar la sesión actual de un usuario en el sistema.
      *
      * @param nombre Identificador de la sesión actual a cerrar
      * @return True si la sesión actual se cerró correctamente, False si no fue
@@ -130,6 +147,14 @@ public class ServidorCuentaUsuarioRMI implements CuentaUsuarioInterface {
         }
 
         return sesionCerrada;
+    }
+
+    /**
+     * Inicializa el ServidorCuentaUsuarioRMI.
+     */
+    public ServidorCuentaUsuarioRMI() {
+        EntityManagerFactory fabricaEntityManager = Persistence.createEntityManagerFactory("ServidorQAPU");
+        controladorUsuario = new UsuarioJpaController(fabricaEntityManager);
     }
 
 }

@@ -30,6 +30,16 @@ public class GraficaRespuestas implements Serializable {
         this.contadorC = 0;
         this.contadorD = 0;
     }
+    
+    /**
+     * Reestablece a 0 la cantidad de veces respondida de una respuesta.
+     */
+    public void reestablecerValores() {
+        contadorA = 0;
+        contadorB = 0;
+        contadorC = 0;
+        contadorD = 0;
+    }
 
     /**
      * Aumenta el contador de la respuesta (A,B,C,D) que llega como parametro
@@ -53,18 +63,34 @@ public class GraficaRespuestas implements Serializable {
         }
     }
     
+    /**
+     *
+     * @return Veces que se respondío A
+     */
     public int getContadorA() {
         return contadorA;
     }
 
+    /**
+     *
+     * @return Veces que se respondío B
+     */
     public int getContadorB() {
         return contadorB;
     }
 
+    /**
+     *
+     * @return Veces que se respondío C
+     */
     public int getContadorC() {
         return contadorC;
     }
 
+    /**
+     *
+     * @return Veces que se respondío D
+     */
     public int getContadorD() {
         return contadorD;
     }

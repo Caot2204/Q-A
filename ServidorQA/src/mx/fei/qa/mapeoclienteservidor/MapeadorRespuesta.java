@@ -40,8 +40,10 @@ public class MapeadorRespuesta {
     public static Respuesta mapearRespuesta(long idCuestionario, int numeroPregunta, RespuestaCliente respuestaCliente) throws IOException {
         Respuesta respuestaEntity = new Respuesta(idCuestionario, numeroPregunta, respuestaCliente.getLetra());
 
-        if (UtileriaCadena.validarCadena(respuestaCliente.getDescripcion(), 1, 300)) {
-            respuestaEntity.setDescripcion(respuestaCliente.getDescripcion());
+        if (respuestaCliente.getDescripcion() != null) {
+            if (UtileriaCadena.validarCadena(respuestaCliente.getDescripcion(), 1, 300)) {
+                respuestaEntity.setDescripcion(respuestaCliente.getDescripcion());
+            }
         }
 
         if (respuestaCliente.getImagen() != null) {
@@ -65,8 +67,8 @@ public class MapeadorRespuesta {
      * @param respuestasDePregunta Respuestas de una Pregunta
      * @return Lista de Entidades JPA Respuesta
      */
-    public static ArrayList<Respuesta> mapearRespuestasDePregunta(long idCuestionario, int numeroPregunta, ArrayList<RespuestaCliente> respuestasDePregunta) {
-        ArrayList<Respuesta> respuestasEntity = new ArrayList<>();
+    public static List<Respuesta> mapearRespuestasDePregunta(long idCuestionario, int numeroPregunta, List<RespuestaCliente> respuestasDePregunta) {
+        List<Respuesta> respuestasEntity = new ArrayList<>();
 
         respuestasDePregunta.forEach((respuestaCliente) -> {
             try {

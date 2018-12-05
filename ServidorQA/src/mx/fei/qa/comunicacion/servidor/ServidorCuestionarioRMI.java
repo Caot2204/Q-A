@@ -43,7 +43,7 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
      * Solicita a la clase MapeadorCuestionario que convierta un
      * CuestionarioCliente a una entidad Cuestionario, con sus respectivas
      * entidades Preguntas y entidades Respuestas para ser almacenados en la
-     * base de datos
+     * base de datos.
      *
      * @param cuestionario Cuestionario que se desea guardar en la base de datos
      * @return True si el cuestionario fue mapeado y almacenado con éxito, False
@@ -61,14 +61,13 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
 
         cuestionarioEntity = controladorCuestionario.getCuestionario(autor, cuestionario.getNombre());
         long idCuestionario = cuestionarioEntity.getId();
-        System.out.println(idCuestionario);
 
         try {
-            ArrayList<PreguntaCliente> preguntasCliente = cuestionario.getPreguntas();
-            ArrayList<Pregunta> preguntasEntity = MapeadorPregunta.mapearPreguntas(idCuestionario, preguntasCliente);
+            List<PreguntaCliente> preguntasCliente = cuestionario.getPreguntas();
+            List<Pregunta> preguntasEntity = MapeadorPregunta.mapearPreguntas(idCuestionario, preguntasCliente);
             for (int a = 0; a < preguntasCliente.size(); a++) {
                 PreguntaCliente preguntaActual = preguntasCliente.get(a);
-                ArrayList<Respuesta> respuestasEntity = MapeadorRespuesta.mapearRespuestasDePregunta(idCuestionario, preguntaActual.getNumero(), preguntaActual.getRespuestas());
+                List<Respuesta> respuestasEntity = MapeadorRespuesta.mapearRespuestasDePregunta(idCuestionario, preguntaActual.getNumero(), preguntaActual.getRespuestas());
                 controladorCuestionario.getControladorPregunta().create(idCuestionario, preguntasEntity.get(a));
                 for (Respuesta respuestaEntity : respuestasEntity) {
                     controladorCuestionario.getControladorRespuesta().create(respuestaEntity);
@@ -90,7 +89,7 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
     }
 
     /**
-     * Recupera un Cuestionario de la base de datos y lo devuelve al cliente
+     * Recupera un Cuestionario de la base de datos y lo devuelve al cliente.
      *
      * @param autor Nombre de usuario que registró el cuestionario
      * @param nombreCuestionario Nombre del cuestionario a recuperar
@@ -102,12 +101,11 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
     public CuestionarioCliente recuperarCuestionario(String autor, String nombreCuestionario) throws RemoteException {
         Usuario usuario = controladorUsuario.findUsuario(autor);
         Cuestionario cuestionarioEntity = controladorCuestionario.getCuestionario(usuario, nombreCuestionario);
-        CuestionarioCliente cuestionarioCliente = MapeadorCuestionario.mapearACuestionarioCliente(controladorCuestionario, cuestionarioEntity);
-        return cuestionarioCliente;
+        return MapeadorCuestionario.mapearACuestionarioCliente(controladorCuestionario, cuestionarioEntity);
     }
 
     /**
-     * Recupera los Cuestionarios de un usuario y los devuelve al cliente
+     * Recupera los Cuestionarios de un usuario y los devuelve al cliente.
      *
      * @param autor Nombre de usuario que registró los cuestionarios
      * @return Lista de Cuestionarios compatible con el cliente del servidor
@@ -115,8 +113,8 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
      * cliente-servidor
      */
     @Override
-    public ArrayList<CuestionarioCliente> recuperarCuestionariosPorAutor(String autor) throws RemoteException {
-        ArrayList<CuestionarioCliente> cuestionariosCliente = new ArrayList<>();
+    public List<CuestionarioCliente> recuperarCuestionariosPorAutor(String autor) throws RemoteException {
+        List<CuestionarioCliente> cuestionariosCliente = new ArrayList<>();
         Usuario usuario = controladorUsuario.findUsuario(autor);
         List<Cuestionario> cuestionariosEntity = controladorCuestionario.getCuestionariosPorAutor(usuario);
 
@@ -130,7 +128,7 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
 
     /**
      * Modifica los datos de un cuestionario registrado por un usuario con los
-     * datos del cuestionario que viene en el parámetro
+     * datos del cuestionario que viene en el parámetro.
      *
      * @param cuestionario Datos del cuestionario que fué editado en el cliente
      * @return True si de modifico con éxito el cuestionario, false si no fué
@@ -141,20 +139,17 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
     @Override
     public boolean editarCuestionario(CuestionarioCliente cuestionario) throws RemoteException {
         boolean editadoExitoso = false;
-        Usuario autor = controladorUsuario.findUsuario(cuestionario.getAutor());
-        Cuestionario cuestionarioAEditar = controladorCuestionario.getCuestionario(autor, cuestionario.getNombre());
-        try {
-            controladorCuestionario.destroy(cuestionarioAEditar.getId());
-            guardarCuestionario(cuestionario);
-        } catch (IllegalOrphanException | NonexistentEntityException ex) {
-            Logger.getLogger(ServidorCuestionarioRMI.class.getName()).log(Level.SEVERE, null, ex);
+        if (eliminarCuestionario(cuestionario.getAutor(), cuestionario.getNombre())) {
+            if (guardarCuestionario(cuestionario)) {
+                editadoExitoso = true;
+            }
         }
         return editadoExitoso;
     }
 
     /**
      * Elimina de la base de datos el cuestionario tenga como autor y nombre los
-     * datos especificados en los parámetros
+     * datos especificados en los parámetros.
      *
      * @param nombreAutor Nombre de usuario que registro el cuestionario
      * @param nombreCuestionario Nombre del cuestionario a eliminar
@@ -166,12 +161,9 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
     public boolean eliminarCuestionario(String nombreAutor, String nombreCuestionario) throws RemoteException {
         boolean eliminadoExitoso = false;
         Usuario autor = controladorUsuario.findUsuario(nombreAutor);
-        Cuestionario cuestionario = controladorCuestionario.getCuestionario(autor, nombreCuestionario);
-        try {
-            controladorCuestionario.destroy(cuestionario.getId());
+        Cuestionario cuestionarioAEditar = controladorCuestionario.getCuestionario(autor, nombreCuestionario);
+        if (controladorCuestionario.eliminarCuestionario(cuestionarioAEditar.getId())) {
             eliminadoExitoso = true;
-        } catch (IllegalOrphanException | NonexistentEntityException ex) {
-            Logger.getLogger(ServidorCuestionarioRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
         return eliminadoExitoso;
     }
@@ -179,7 +171,7 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
     /**
      * Inicializar las variables utilizadas en el ServidorCuestionario
      * obteniendo una referencia del persistence.xml y de los controladores JPA
-     * utiliados
+     * utiliados.
      */
     public ServidorCuestionarioRMI() {
         EntityManagerFactory fabricaEntityManager = Persistence.createEntityManagerFactory("ServidorQAPU");

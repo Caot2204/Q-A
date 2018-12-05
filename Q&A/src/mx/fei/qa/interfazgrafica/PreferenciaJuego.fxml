@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="570.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.fei.qa.interfazgrafica.PreferenciaJuegoController">
+   <children>
+      <ImageView fx:id="imageViewFotoPerfil" fitHeight="113.0" fitWidth="125.0" layoutX="116.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="116.0" layoutY="179.0" mnemonicParsing="false" onAction="#subirFotoPerfil" prefHeight="25.0" prefWidth="125.0" text="%key.subirFotoPerfil" />
+      <ImageView fitHeight="40.0" fitWidth="57.0" layoutX="17.0" layoutY="362.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/contraseña.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="27.0" layoutY="289.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/correo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="36.0" layoutX="27.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/ic-username_97587.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="textFieldContrasenia" layoutX="77.0" layoutY="362.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.contrasenia" />
+      <TextField fx:id="textFieldCorreoElectronico" layoutX="77.0" layoutY="291.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.correoElectronico" />
+      <TextField fx:id="textFieldNombreUsuario" layoutX="77.0" layoutY="228.0" prefHeight="32.0" prefWidth="263.0" promptText="%key.nombreUsuario" />
+      <Button layoutX="209.0" layoutY="529.0" mnemonicParsing="false" onAction="#guardar" prefHeight="25.0" prefWidth="132.0" text="%key.guardar" />
+      <Button layoutX="12.0" layoutY="529.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="25.0" prefWidth="132.0" text="%key.cancelar" />
+      <Separator layoutX="14.0" layoutY="44.0" prefHeight="5.0" prefWidth="327.0" />
+      <Label layoutX="16.0" layoutY="14.0" text="%key.datosCuenta">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="16.0" layoutY="419.0" text="%key.idiomaJuego">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Separator layoutX="14.0" layoutY="449.0" prefHeight="5.0" prefWidth="327.0" />
+      <ComboBox fx:id="comboBoxIdioma" layoutX="53.0" layoutY="469.0" prefHeight="25.0" prefWidth="252.0" />
+      <Separator layoutX="15.0" layoutY="511.0" prefHeight="5.0" prefWidth="327.0" />
+   </children>
+</AnchorPane>

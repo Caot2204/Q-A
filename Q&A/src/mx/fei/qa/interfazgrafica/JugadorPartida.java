@@ -5,6 +5,8 @@
  */
 package mx.fei.qa.interfazgrafica;
 
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -19,8 +21,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
 import javafx.stage.Stage;
+import javax.xml.bind.DatatypeConverter;
 import mx.fei.qa.dominio.actores.Jugador;
 import mx.fei.qa.dominio.cuestionario.PreguntaCliente;
 import mx.fei.qa.dominio.cuestionario.RespuestaCliente;
@@ -44,11 +46,10 @@ public class JugadorPartida {
     private short codigoInvitacion;
     private Socket socket;
     private Object idSocketMonitor;
-    private Control elementoSalaEspera;
 
     /**
      * Devuelve la instancia del JugadorPartida necesaria para que un usuario no
-     * monitor juegue una partida
+     * monitor juegue una partida.
      *
      * @return JugadorPartida
      */
@@ -71,7 +72,9 @@ public class JugadorPartida {
      */
     private JugadorPartida() throws URISyntaxException {
         this.chat = new ArrayList<>();
-        socket = IO.socket("http://localhost:5000");
+        ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+        String ipServidorEscogido = propiedadesCliente.getString("key.ipServidor1");
+        socket = IO.socket("http://" + ipServidorEscogido + ":5000");
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... os) {
@@ -96,11 +99,11 @@ public class JugadorPartida {
             public void call(Object... os) {
                 JSONObject preguntaRecibida = (JSONObject) os[0];
                 PreguntaCliente pregunta = new PreguntaCliente();
-                pregunta.setDescripcion(preguntaRecibida.getString("descripcion"));
-                try {
-                    pregunta.setImagen((byte[]) preguntaRecibida.get("imagen"));
-                } catch (JSONException excepcion) {
-                    pregunta.setImagen(null);
+                if (preguntaRecibida.has("descripcion")) {
+                    pregunta.setDescripcion(preguntaRecibida.getString("descripcion"));
+                }
+                if (preguntaRecibida.has("imagen")) {
+                    pregunta.setImagen(DatatypeConverter.parseBase64Binary(preguntaRecibida.getString("imagen")));
                 }
                 desplegarPregunta(pregunta);
             }
@@ -108,12 +111,13 @@ public class JugadorPartida {
             @Override
             public void call(Object... os) {
                 JSONObject preguntaConRespuestasRecibida = (JSONObject) os[0];
+                JSONObject preguntaRecibida = preguntaConRespuestasRecibida.getJSONObject("pregunta");
                 PreguntaCliente pregunta = new PreguntaCliente();
-                pregunta.setDescripcion(preguntaConRespuestasRecibida.getString("descripcionPregunta"));
-                try {
-                    pregunta.setImagen((byte[]) preguntaConRespuestasRecibida.get("imagenPregunta"));
-                } catch (JSONException excepcion) {
-                    pregunta.setImagen(null);
+                if (preguntaRecibida.has("descripcion")) {
+                    pregunta.setDescripcion(preguntaRecibida.getString("descripcion"));
+                }
+                if (preguntaRecibida.has("imagen")) {
+                    pregunta.setImagen(DatatypeConverter.parseBase64Binary(preguntaRecibida.getString("imagen")));
                 }
 
                 JSONArray respuestasRecibidas = preguntaConRespuestasRecibida.getJSONArray("respuestas");
@@ -125,11 +129,11 @@ public class JugadorPartida {
                     char letra = letraRecibida.charAt(0);
                     respuesta.setLetra(letra);
                     respuesta.setEsCorrecta(respuestaRecibida.getBoolean("esCorrecta"));
-                    respuesta.setDescripcion(respuestaRecibida.getString("descripcion"));
-                    try {
-                        respuesta.setImagen((byte[]) respuestaRecibida.get("imagen"));
-                    } catch (JSONException excepcion) {
-                        respuesta.setImagen(null);
+                    if (respuestaRecibida.has("descripcion")) {
+                        respuesta.setDescripcion(respuestaRecibida.getString("descripcion"));
+                    }
+                    if (respuestaRecibida.has("imagen")) {
+                        respuesta.setImagen(DatatypeConverter.parseBase64Binary(respuestaRecibida.getString("imagen")));
                     }
                     respuestas.add(respuesta);
                 }
@@ -159,6 +163,7 @@ public class JugadorPartida {
         }).on("recibirMensajeChat", new Emitter.Listener() {
             @Override
             public void call(Object... os) {
+                System.out.println("se recibio un mensaje...");
                 JSONObject mensajeRecibido = (JSONObject) os[0];
                 MensajeChat mensaje = new MensajeChat();
                 mensaje.setNombreJugador(mensajeRecibido.getString("jugador"));
@@ -337,6 +342,25 @@ public class JugadorPartida {
      */
     public void actualizarChat(MensajeChat mensaje) {
         chat.add(mensaje);
+        Locale locale = Locale.getDefault();
+        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("Chat.fxml"), recursoIdioma);
+        try {
+            ChatController pantallaChat = cargadorFXML.getController();
+            if (pantallaChat != null) {
+                pantallaChat.actualizarChat();
+            } else {
+                Parent padre = cargadorFXML.load();
+                Stage escenario = new Stage();
+                escenario.setScene(new Scene(padre));
+                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setResizable(false);
+                escenario.show();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(JugadorPartida.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -348,7 +372,7 @@ public class JugadorPartida {
         JSONObject mensajeAEnviar = new JSONObject();
         mensajeAEnviar.put("jugador", mensaje.getNombreJugador());
         mensajeAEnviar.put("mensaje", mensaje.getMensaje());
-        socket.emit("enviarMensajeChat", mensajeAEnviar);
+        socket.emit("enviarMensajeChat", codigoInvitacion, mensajeAEnviar);
         actualizarChat(mensaje);
     }
 

@@ -7,6 +7,7 @@ package mx.fei.qa.dominio.cuestionario;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,12 +19,14 @@ public class CuestionarioCliente implements Serializable {
     private int vecesJugado;
     private String ultimoGanador;
     private String autor;
-    private ArrayList<PreguntaCliente> preguntas;
+    private List<PreguntaCliente> preguntas;
 
     public CuestionarioCliente() {
-        
+        this.preguntas = new ArrayList<>();
+        this.vecesJugado = 0;
+        this.ultimoGanador = "";
     }
-
+    
     public String getNombre() {
         return nombre;
     }
@@ -38,6 +41,10 @@ public class CuestionarioCliente implements Serializable {
 
     public void setVecesJugado(int vecesJugado) {
         this.vecesJugado = vecesJugado;
+    }
+    
+    public void aumentarVecesJugado() {
+        this.vecesJugado++;
     }
 
     public String getUltimoGanador() {
@@ -56,12 +63,16 @@ public class CuestionarioCliente implements Serializable {
         this.autor = autor;
     }
 
-    public ArrayList<PreguntaCliente> getPreguntas() {
+    public List<PreguntaCliente> getPreguntas() {
         return preguntas;
     }
-
-    public void setPreguntas(ArrayList<PreguntaCliente> preguntas) {
+    
+    public void setPreguntas(List<PreguntaCliente> preguntas) {
         this.preguntas = preguntas;
+    }
+
+    public void agregarPregunta(PreguntaCliente pregunta) {
+        this.preguntas.add(pregunta);
     }
     
 }

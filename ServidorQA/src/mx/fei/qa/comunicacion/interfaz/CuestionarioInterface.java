@@ -7,7 +7,7 @@ package mx.fei.qa.comunicacion.interfaz;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.List;
 import mx.fei.qa.dominio.cuestionario.CuestionarioCliente;
 
 /**
@@ -23,7 +23,7 @@ public interface CuestionarioInterface extends Remote {
 
     public CuestionarioCliente recuperarCuestionario(String autor, String nombreCuestionario) throws RemoteException;
 
-    public ArrayList<CuestionarioCliente> recuperarCuestionariosPorAutor(String autor) throws RemoteException;
+    public List<CuestionarioCliente> recuperarCuestionariosPorAutor(String autor) throws RemoteException;
 
     public boolean editarCuestionario(CuestionarioCliente cuestionario) throws RemoteException;
 
