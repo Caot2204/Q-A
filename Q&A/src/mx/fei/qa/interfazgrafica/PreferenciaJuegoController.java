@@ -166,7 +166,7 @@ public class PreferenciaJuegoController implements Initializable {
     private void guardarPreferenciasDeIdioma(String idioma) {
         Properties prop = new Properties();
         try {
-            File propiedadesCliente = new File(getClass().getProtectionDomain().getCodeSource() + "/mx/fei/qa/utileria/cliente.properties");
+            File propiedadesCliente = new File("src/mx/fei/qa/utileria/cliente.properties");
             InputStream in = new FileInputStream(propiedadesCliente);
             prop.load(in);
             prop.setProperty("key.idioma", idioma);

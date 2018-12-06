@@ -5,8 +5,8 @@ console.log("BorkerPartida escuchando...");
 
 io.on("connection", function(socket) {
     
-    socket.on("comenzarPartida", function(codigoPartida, primerPregunta){
-        io.to(codigoPartida).emit("comenzarPartida", primerPregunta, socket.id);
+    socket.on("comenzarPartida", function(codigoPartida, primerPregunta, idSocket){
+        io.to(codigoPartida).emit("comenzarPartida", primerPregunta, idSocket);
     });
     
     socket.on("unirAPartida", function(codigoPartida){
@@ -36,7 +36,7 @@ io.on("connection", function(socket) {
     });
     
     socket.on("responderPregunta", function(idMonitor, respuestaAPregunta){
-        socket.broadcast.to(idMonitor).emit("recibirRespuesta", respuestaAPregunta);        
+        io.to(idMonitor).emit("recibirRespuesta", respuestaAPregunta);        
     });
     
     socket.on("enviarMensajeChat", function(codigoPartida, mensaje){

@@ -5,8 +5,6 @@
  */
 package mx.fei.qa.interfazgrafica;
 
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -45,7 +43,7 @@ public class JugadorPartida {
     private final ArrayList<MensajeChat> chat;
     private short codigoInvitacion;
     private Socket socket;
-    private Object idSocketMonitor;
+    private String idSocketMonitor;
 
     /**
      * Devuelve la instancia del JugadorPartida necesaria para que un usuario no
@@ -91,7 +89,7 @@ public class JugadorPartida {
                 } catch (JSONException excepcion) {
                     pregunta.setImagen(null);
                 }
-                idSocketMonitor = os[1];
+                idSocketMonitor = (String) os[1];
                 desplegarPregunta(pregunta);
             }
         }).on("desplegarPregunta", new Emitter.Listener() {

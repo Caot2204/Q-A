@@ -15,12 +15,10 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -157,7 +155,8 @@ public class MonitorPartida {
     public boolean iniciarPartida(String nombreCuestionario) {
         boolean creacionExitosa = false;
         try {
-            registro = LocateRegistry.getRegistry();
+            ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+            registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
             stubPartida = (PartidaInterface) registro.lookup("servidorPartidas");
             AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
             String autorCuestionario = administradorSesion.getNombreUsuarioActual();
@@ -237,8 +236,7 @@ public class MonitorPartida {
             partida = stubPartida.recuperarPartida(codigoInvitacion);
             preguntaActual = partida.obtenerPrimerPregunta();
             JSONObject pregunta = convertirPreguntaAJSONObject(preguntaActual);
-            socket.emit("comenzarPartida", codigoInvitacion, pregunta);
-
+            socket.emit("comenzarPartida", codigoInvitacion, pregunta, socket.id());
             Locale locale = Locale.getDefault();
             ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
             FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MuestraDePregunta.fxml"));
@@ -474,7 +472,7 @@ public class MonitorPartida {
      * @param preguntaCliente Pregunta actual
      * @return JSONObject
      */
-    private JSONObject convertirPreguntaAJSONObject(PreguntaCliente preguntaCliente) {        
+    private JSONObject convertirPreguntaAJSONObject(PreguntaCliente preguntaCliente) {
         JSONObject pregunta = new JSONObject();
         if (preguntaCliente.getDescripcion() != null) {
             pregunta.put("descripcion", preguntaCliente.getDescripcion());
