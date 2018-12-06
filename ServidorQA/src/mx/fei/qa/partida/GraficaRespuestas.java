@@ -60,6 +60,7 @@ public class GraficaRespuestas implements Serializable {
             case 'D':
                 contadorD++;
                 break;
+            default: throw new IllegalArgumentException("Opcion inválida");
         }
     }
     

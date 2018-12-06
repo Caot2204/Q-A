@@ -16,8 +16,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,13 +24,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.xml.bind.DatatypeConverter;
 import mx.fei.qa.comunicacion.interfaz.PartidaInterface;
 import mx.fei.qa.dominio.cuestionario.PreguntaCliente;
@@ -42,6 +33,7 @@ import mx.fei.qa.partida.MensajeChat;
 import mx.fei.qa.partida.Partida;
 import mx.fei.qa.partida.PuntajeJugador;
 import mx.fei.qa.sesion.AdministradorSesionActual;
+import mx.fei.qa.utileria.UtileriaCorreo;
 import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,8 +51,9 @@ public class MonitorPartida {
     private Partida partida;
     private short codigoInvitacion;
     private PreguntaCliente preguntaActual;
-    private Registry registro;
     private PartidaInterface stubPartida;
+    
+    private static final String KEY_A_JUGAR = "key.aJugarQA";
 
     /**
      * Devuelve la instancia del MonitorPartida para controlar los eventos que
@@ -95,8 +88,7 @@ public class MonitorPartida {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... os) {
-                socket.emit("unirAPartida", codigoInvitacion);
-                System.out.println("Monitor conectado" + codigoInvitacion);
+                // No es necesario hacer algo al conectarse el monitor de la partida.                
             }
         }).on("recibirRespuesta", new Emitter.Listener() {
             @Override
@@ -156,13 +148,14 @@ public class MonitorPartida {
         boolean creacionExitosa = false;
         try {
             ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
-            registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
+            Registry registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
             stubPartida = (PartidaInterface) registro.lookup("servidorPartidas");
             AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
             String autorCuestionario = administradorSesion.getNombreUsuarioActual();
             codigoInvitacion = stubPartida.crearPartida(autorCuestionario, nombreCuestionario);
             if (codigoInvitacion >= 0) {
                 creacionExitosa = true;
+                socket.emit("unirAPartida", codigoInvitacion);
             }
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(MonitorPartida.class.getName()).log(Level.SEVERE, null, ex);
@@ -174,58 +167,18 @@ public class MonitorPartida {
      * Envía todas las invitaciones a la partida.
      *
      * @param correos Correos electrónicos ingresados
+     * @param jugadores Jugadores seleccionados para invitar
      */
-    public void enviarInvitaciones(ArrayList<String> correos) {
+    public void enviarInvitaciones(List<String> correos, List<String> jugadores) {
         Platform.runLater(() -> {
+            AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
             for (int a = 0; a < correos.size(); a++) {
-                enviarCorreo(correos.get(a));
+                UtileriaCorreo.enviarCorreoCodigoInvitacion(correos.get(a), codigoInvitacion);
+            }
+            for (int a = 0; a < jugadores.size(); a++) {
+                administradorSesion.enviarNotificacionesAUsuarios(jugadores.get(a), codigoInvitacion, "cuestionario prueba");
             }
         });
-    }
-
-    /**
-     * Envía el código de invitación al correoDestinario, a través del correo
-     * del sistema.
-     *
-     * @param correoDestinatario Correo electrónico destinarario
-     */
-    private void enviarCorreo(String correoDestinatario) {
-        ResourceBundle recursoPropiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
-        String correoDelJuego = recursoPropiedadesCliente.getString("key.correoDelJuego");
-        String contrasenia = recursoPropiedadesCliente.getString("key.contraseniaDelCorreo");
-
-        Properties propiedadesCorreo = new Properties();
-        propiedadesCorreo.put("mail.smtp.auth", "true");
-        propiedadesCorreo.put("mail.smtp.starttls.enable", "true");
-        propiedadesCorreo.put("mail.smtp.host", "smtp.gmail.com");
-        propiedadesCorreo.put("mail.smtp.port", "587");
-
-        Session sesion = Session.getInstance(propiedadesCorreo,
-                new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(correoDelJuego, contrasenia);
-            }
-        });
-
-        try {
-            Locale locale = Locale.getDefault();
-            ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
-            String asunto = recursoIdioma.getString("key.asuntoCorreo");
-            String cuerpo = recursoIdioma.getString("key.cuerpoCorreo");
-            Message correo = new MimeMessage(sesion);
-
-            correo.setFrom(new InternetAddress(correoDelJuego));
-            correo.setRecipients(Message.RecipientType.TO, InternetAddress.parse(correoDestinatario));
-            correo.setSubject(asunto);
-            correo.setText(cuerpo + ":\n\n" + Short.toString(codigoInvitacion));
-
-            Transport.send(correo);
-
-        } catch (MessagingException ex) {
-            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
-                    "key.encabezadoError", "key.errorEnviarCorreo");
-        }
     }
 
     /**
@@ -237,8 +190,7 @@ public class MonitorPartida {
             preguntaActual = partida.obtenerPrimerPregunta();
             JSONObject pregunta = convertirPreguntaAJSONObject(preguntaActual);
             socket.emit("comenzarPartida", codigoInvitacion, pregunta, socket.id());
-            Locale locale = Locale.getDefault();
-            ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+            ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
             FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MuestraDePregunta.fxml"));
             try {
                 Parent padre = cargadorFXML.load();
@@ -247,7 +199,7 @@ public class MonitorPartida {
 
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             } catch (IOException ex) {
@@ -276,14 +228,13 @@ public class MonitorPartida {
      * Envia una pregunta para que los jugadores unidos a la partida puedan
      * responderla.
      */
-    public void enviarPreguntaAJugadores() throws IndexOutOfBoundsException {
+    public void enviarPreguntaAJugadores() {
         partida.getGraficaPreguntaActual().reestablecerValores();
         preguntaActual = partida.obtenerSiguientePregunta();
         JSONObject pregunta = convertirPreguntaAJSONObject(preguntaActual);
         socket.emit("enviarSiguientePregunta", codigoInvitacion, pregunta);
 
-        Locale locale = Locale.getDefault();
-        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MuestraDePregunta.fxml"), recursoIdioma);
         try {
             Parent padre = cargadorFXML.load();
@@ -292,7 +243,7 @@ public class MonitorPartida {
 
             Stage escenario = new Stage();
             escenario.setScene(new Scene(padre));
-            escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+            escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
             escenario.setResizable(false);
             escenario.show();
         } catch (IOException ex) {
@@ -327,7 +278,7 @@ public class MonitorPartida {
      * interfaz gráfica.
      */
     public void enviarMarcadorAJugadores() {
-        ArrayList<PuntajeJugador> marcador = partida.getMarcador();
+        List<PuntajeJugador> marcador = partida.getMarcador();
         ArrayList<String> marcadorString = new ArrayList<>();
         for (int a = 0; a < marcador.size(); a++) {
             PuntajeJugador puntaje = marcador.get(a);
@@ -339,8 +290,7 @@ public class MonitorPartida {
         JSONArray marcadorAEnviar = new JSONArray(marcadorString);
         socket.emit("enviarMarcador", codigoInvitacion, marcadorAEnviar);
 
-        Locale locale = Locale.getDefault();
-        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MarcadorJugadores.fxml"), recursoIdioma);
         try {
             Parent padre = cargadorFXML.load();
@@ -349,7 +299,7 @@ public class MonitorPartida {
 
             Stage escenario = new Stage();
             escenario.setScene(new Scene(padre));
-            escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+            escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
             escenario.setResizable(false);
             escenario.show();
         } catch (IOException ex) {
@@ -388,8 +338,7 @@ public class MonitorPartida {
         String tercerNombre = tercerLugar.getString("nombre");
         String tercerPuntaje = tercerLugar.getString("puntaje");
 
-        Locale locale = Locale.getDefault();
-        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("Medallero.fxml"), recursoIdioma);
         try {
             Parent padre = cargadorFXML.load();
@@ -400,7 +349,7 @@ public class MonitorPartida {
 
             Stage escenario = new Stage();
             escenario.setScene(new Scene(padre));
-            escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+            escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
             escenario.setResizable(false);
             escenario.show();
         } catch (IOException ex) {
@@ -416,8 +365,7 @@ public class MonitorPartida {
      */
     public void actualizarChat(MensajeChat mensaje) {
         partida.actualizarChat(mensaje);
-        Locale locale = Locale.getDefault();
-        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("Chat.fxml"), recursoIdioma);
         try {
             ChatController pantallaChat = cargadorFXML.getController();
@@ -428,7 +376,7 @@ public class MonitorPartida {
                 Parent padre = cargadorFXML.load();
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             }
@@ -456,9 +404,9 @@ public class MonitorPartida {
      *
      * @return Chat adaptado para IU
      */
-    public ArrayList<String> getChat() {
+    public List<String> getChat() {
         ArrayList<String> chatParaIU = new ArrayList<>();
-        ArrayList<MensajeChat> chatPartida = partida.getChat();
+        List<MensajeChat> chatPartida = partida.getChat();
         for (int a = 0; a < chatPartida.size(); a++) {
             MensajeChat mensaje = chatPartida.get(a);
             chatParaIU.add(mensaje.getNombreJugador() + ": " + mensaje.getMensaje());

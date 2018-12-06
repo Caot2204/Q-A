@@ -10,23 +10,27 @@ import mx.fei.qa.comunicacion.interfaz.CuentaUsuarioInterface;
 import mx.fei.qa.dominio.actores.UsuarioCliente;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import mx.fei.qa.sesion.AdministradorSesionActual;
 import mx.fei.qa.utileria.UtileriaCadena;
+import mx.fei.qa.utileria.UtileriaCorreo;
 
 /**
  * FXML Controller class
@@ -51,14 +55,17 @@ public class RegistroUsuarioController implements Initializable {
     private String correo;
     private String contrasenia;
     private File archivoFotoPerfil;
-    private Image fotoPerfilParaImageView;
+    private int codigoConfirmacion;
+    
+    private static final String LONGITUD_INVALIDA = "Longitud invalida";
+    private static final String KEY_DATOS_INVALIDOS = "key.datosInvalidos";
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        codigoConfirmacion = 0;
     }
 
     /**
@@ -67,11 +74,11 @@ public class RegistroUsuarioController implements Initializable {
     public void subirFotoPerfil() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Escoja una imagen");
-        File archivoElegido = fileChooser.showOpenDialog(imageViewFotoPerfil.getScene().getWindow());;
+        File archivoElegido = fileChooser.showOpenDialog(imageViewFotoPerfil.getScene().getWindow());
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 archivoFotoPerfil = archivoElegido;
-                fotoPerfilParaImageView = new Image("file:" + archivoFotoPerfil.getAbsolutePath());
+                Image fotoPerfilParaImageView = new Image("file:" + archivoFotoPerfil.getAbsolutePath());
                 imageViewFotoPerfil.setImage(fotoPerfilParaImageView);
             } else {
                 UtileriaInterfazUsuario.mostrarMensajeError("key.archivoInvalido",
@@ -100,24 +107,59 @@ public class RegistroUsuarioController implements Initializable {
             } else {
                 usuario.setFotoPerfil(null);
             }
-            try {
-                ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
-                Registry registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
-                CuentaUsuarioInterface stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
-                AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
-                stub.guardarUsuario(usuario);
-                administradorSesion.setSesionUsuario(stub.iniciarSesion(nombreUsuario, contrasenia));
-                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard",
-                        "DashboardQA.fxml", textFieldNombreUsuario);
-
-            } catch (IllegalArgumentException excepcion) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.errorGuardarDatos",
-                        "key.errorCrearCuenta", "key.nombreUsuarioExistente");
-            } catch (RemoteException | NotBoundException ex) {
-                Logger.getLogger(RegistroUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+            codigoConfirmacion = (int) (Math.random() * 10000) + 1;
+            UtileriaCorreo.enviarCorreoCodigoConfirmacion(correo, codigoConfirmacion);
+            if (codigoConfirmacion == solicitarCodigoConfirmacion()) {
+                almacenarUsuarioEnServidor(usuario);
             }
         }
 
+    }
+
+    /**
+     * Despliega un cuadro de texto para ingresar el código de confirmación.
+     *
+     * @return Código de confirmación ingresado
+     */
+    private int solicitarCodigoConfirmacion() {
+        String codigoIngresado = "";
+        ResourceBundle recurso = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
+        TextInputDialog solicitudCodigo = new TextInputDialog();
+        solicitudCodigo.setTitle(recurso.getString("key.mensajeDeSistema"));
+        solicitudCodigo.setHeaderText(recurso.getString("key.ingresarCodigoConfirmacion"));
+        solicitudCodigo.setContentText(recurso.getString("key.codigoInvitacion"));
+
+        Optional<String> nombreIngresado = solicitudCodigo.showAndWait();
+        if (nombreIngresado.isPresent()) {
+            codigoIngresado = nombreIngresado.get();
+        }
+        return Integer.parseInt(codigoIngresado);
+    }
+
+    /**
+     * Envía los datos ingresados al servidor para registrar la cuenta de
+     * usuario.
+     *
+     * @param usuario Cuenta de usuario registrada
+     */
+    private void almacenarUsuarioEnServidor(UsuarioCliente usuario) {
+        try {
+            ResourceBundle propiedadesCliente = ResourceBundle.getBundle("mx.fei.qa.utileria.cliente");
+            Registry registro = LocateRegistry.getRegistry(propiedadesCliente.getString("key.ipServidor1"));
+            CuentaUsuarioInterface stub = (CuentaUsuarioInterface) registro.lookup("servidorCuentasUsuario");
+            AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
+            stub.guardarUsuario(usuario);
+            administradorSesion.setSesionUsuario(stub.iniciarSesion(nombreUsuario, contrasenia));
+            UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard",
+                    "DashboardQA.fxml", textFieldNombreUsuario);
+        } catch (IllegalArgumentException excepcion) {
+            UtileriaInterfazUsuario.mostrarMensajeError("key.errorGuardarDatos",
+                    "key.errorCrearCuenta", "key.nombreUsuarioExistente");
+        } catch (RemoteException | NotBoundException ex) {
+            Logger.getLogger(RegistroUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(RegistroUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -143,12 +185,12 @@ public class RegistroUsuarioController implements Initializable {
         try {
             UtileriaCadena.validarCadena(nombreUsuario, 1, 150);
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueNombreUsuario",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueNombreUsuario", excepcion.getMessage());
             }
             textFieldNombreUsuario.requestFocus();
@@ -158,12 +200,12 @@ public class RegistroUsuarioController implements Initializable {
         try {
             UtileriaCadena.validarCadena(correo, 1, 150);
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueEmail",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueEmail", excepcion.getMessage());
             }
             textFieldCorreo.requestFocus();
@@ -173,12 +215,12 @@ public class RegistroUsuarioController implements Initializable {
         try {
             UtileriaCadena.validarCadena(contrasenia, 1, 100);
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueContrasenia",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueContrasenia", excepcion.getMessage());
             }
             textFieldContrasenia.requestFocus();

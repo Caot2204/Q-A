@@ -63,7 +63,7 @@ public class AdministradorCuestionario {
     /**
      * Establece el nombre y autor del cuestionario.
      *
-     * @param nombreCuestionario
+     * @param nombreCuestionario Nombre escrito para el cuestionario
      */
     public void establecerDatosGenerales(String nombreCuestionario) {
         AdministradorSesionActual administradorSesion = AdministradorSesionActual.obtenerAdministrador();
@@ -74,7 +74,7 @@ public class AdministradorCuestionario {
     /**
      * Agrega una pregunta temporalmente al cuestionario.
      *
-     * @param pregunta
+     * @param pregunta Pregunta ingresada en la IU
      */
     public void agregarPregunta(PreguntaCliente pregunta) {
         pregunta.setNumero((cuestionario.getPreguntas().size() + 1));

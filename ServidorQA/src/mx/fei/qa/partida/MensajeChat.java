@@ -18,10 +18,6 @@ public class MensajeChat implements Serializable {
     private String nombreJugador;
     private String mensaje;
 
-    public MensajeChat() {
-
-    }
-
     public String getNombreJugador() {
         return nombreJugador;
     }

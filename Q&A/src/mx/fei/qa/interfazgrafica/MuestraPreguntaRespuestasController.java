@@ -75,6 +75,10 @@ public class MuestraPreguntaRespuestasController implements Initializable {
     private RespuestaCliente respuestaC;
     private RespuestaCliente respuestaD;
     private JugadorPartida jugadorPartida;
+    
+    private static final String FILE = "file:";
+    private static final String KEY_A_JUGAR = "key.aJugarQA";
+    private static final String SALA_ESPERA = "SalaEspera.fxml";
 
     /**
      * Inhabilida las acciones al dar clic a una respuesta si se detecta que el
@@ -122,7 +126,7 @@ public class MuestraPreguntaRespuestasController implements Initializable {
                 fileOutputStream.write(pregunta.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + imagenPerfil.getAbsolutePath());
+                Image imagen = new Image(FILE + imagenPerfil.getAbsolutePath());
                 imageViewPregunta.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,12 +147,12 @@ public class MuestraPreguntaRespuestasController implements Initializable {
         labelRespuestaA.setText(respuestaA.getDescripcion());
         if (respuestaA.getImagen() != null) {
             try {
-                File imagenRespuestaA = new File("imagenRespuesta");
+                File imagenRespuestaA = new File("imagenRespuestaA");
                 FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaA);
                 fileOutputStream.write(respuestaA.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + imagenRespuestaA.getAbsolutePath());
+                Image imagen = new Image(FILE + imagenRespuestaA.getAbsolutePath());
                 imageViewRespuestaA.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,12 +169,12 @@ public class MuestraPreguntaRespuestasController implements Initializable {
         labelRespuestaB.setText(respuestaB.getDescripcion());
         if (respuestaB.getImagen() != null) {
             try {
-                File imagenRespuestaB = new File("imagenRespuesta");
+                File imagenRespuestaB = new File("imagenRespuestaB");
                 FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaB);
                 fileOutputStream.write(respuestaB.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + imagenRespuestaB.getAbsolutePath());
+                Image imagen = new Image(FILE + imagenRespuestaB.getAbsolutePath());
                 imageViewRespuestaB.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -187,12 +191,12 @@ public class MuestraPreguntaRespuestasController implements Initializable {
         labelRespuestaC.setText(respuestaC.getDescripcion());
         if (respuestaC.getImagen() != null) {
             try {
-                File imagenRespuestaC = new File("imagenRespuesta");
+                File imagenRespuestaC = new File("imagenRespuestaC");
                 FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaC);
                 fileOutputStream.write(respuestaC.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + imagenRespuestaC.getAbsolutePath());
+                Image imagen = new Image(FILE + imagenRespuestaC.getAbsolutePath());
                 imageViewRespuestaC.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -209,12 +213,12 @@ public class MuestraPreguntaRespuestasController implements Initializable {
         labelRespuestaD.setText(respuestaD.getDescripcion());
         if (respuestaD.getImagen() != null) {
             try {
-                File imagenRespuestaD = new File("imagenRespuesta");
+                File imagenRespuestaD = new File("imagenRespuestaD");
                 FileOutputStream fileOutputStream = new FileOutputStream(imagenRespuestaD);
                 fileOutputStream.write(respuestaD.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + imagenRespuestaD.getAbsolutePath());
+                Image imagen = new Image(FILE + imagenRespuestaD.getAbsolutePath());
                 imageViewRespuestaD.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MuestraPreguntaRespuestasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,12 +246,12 @@ public class MuestraPreguntaRespuestasController implements Initializable {
         labelContador.setAlignment(Pos.CENTER);
         if (contador == 0) {
             if (MonitorPartida.existeMonitorPartida()) {
-                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
+                UtileriaInterfazUsuario.mostrarVentana(getClass(), KEY_A_JUGAR,
                         "GraficaRespuestas.fxml", labelContador);
             } else {
                 temporizador.stop();
-                UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
-                        "SalaEspera.fxml", labelContador);
+                UtileriaInterfazUsuario.mostrarVentana(getClass(), KEY_A_JUGAR,
+                        SALA_ESPERA, labelContador);
             }
         }
     }
@@ -264,8 +268,8 @@ public class MuestraPreguntaRespuestasController implements Initializable {
             mostrarMensajeRespuestaIncorrecta();
         }
         jugadorPartida.enviarRespuesta('A');
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
-                "SalaEspera.fxml", labelContador);
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), KEY_A_JUGAR,
+                SALA_ESPERA, labelContador);
     }
 
     /**
@@ -280,8 +284,8 @@ public class MuestraPreguntaRespuestasController implements Initializable {
             mostrarMensajeRespuestaIncorrecta();
         }
         jugadorPartida.enviarRespuesta('B');
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
-                "SalaEspera.fxml", labelContador);
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), KEY_A_JUGAR,
+                SALA_ESPERA, labelContador);
     }
 
     /**
@@ -296,8 +300,8 @@ public class MuestraPreguntaRespuestasController implements Initializable {
             mostrarMensajeRespuestaIncorrecta();
         }
         jugadorPartida.enviarRespuesta('C');
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
-                "SalaEspera.fxml", labelContador);
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), KEY_A_JUGAR,
+                SALA_ESPERA, labelContador);
     }
 
     /**
@@ -312,8 +316,8 @@ public class MuestraPreguntaRespuestasController implements Initializable {
             mostrarMensajeRespuestaIncorrecta();
         }
         jugadorPartida.enviarRespuesta('D');
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
-                "SalaEspera.fxml", labelContador);
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), KEY_A_JUGAR,
+                SALA_ESPERA, labelContador);
     }
 
     /**

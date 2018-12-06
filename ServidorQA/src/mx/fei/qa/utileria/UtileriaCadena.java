@@ -12,6 +12,13 @@ package mx.fei.qa.utileria;
  * @author Carlos Onorio
  */
 public class UtileriaCadena {
+    
+    /**
+     * Notifica que es una clase de utilidades y no puede ser instanciada.
+     */
+    private UtileriaCadena() {
+        throw new IllegalStateException("Clase de utilidades para cadenas");
+    }
 
     /**
      * Valida que una cadena no sea nula, no esté vacía y este dentro del rango
@@ -22,7 +29,7 @@ public class UtileriaCadena {
      * @param longitudMaxima Longitud máxima de caracteres permitida
      * @return True si la cadena es valida, false si no lo es
      */
-    public static boolean validarCadena(String cadena, int longitudMinima, int longitudMaxima) throws IllegalArgumentException {
+    public static boolean validarCadena(String cadena, int longitudMinima, int longitudMaxima) {
         boolean camposValidos = false;
         if (cadena != null && !cadena.isEmpty()) {
             if (cadena.length() <= longitudMaxima && cadena.length() > longitudMinima) {

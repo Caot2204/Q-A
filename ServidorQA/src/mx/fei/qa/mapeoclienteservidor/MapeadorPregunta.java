@@ -25,6 +25,9 @@ import mx.fei.qa.utileria.UtileriaCadena;
  */
 public class MapeadorPregunta {
 
+    /**
+     * Notifica que es una clase de utilidades y no puede ser instanciada.
+     */
     private MapeadorPregunta() {
         throw new IllegalStateException("Clase de utilidades para pregunta");
     }
@@ -44,10 +47,8 @@ public class MapeadorPregunta {
     public static Pregunta mapearPregunta(long idCuestionario, PreguntaCliente preguntaCliente) throws IOException {
         Pregunta preguntaEntity = new Pregunta(idCuestionario, preguntaCliente.getNumero());
 
-        if (preguntaCliente.getDescripcion() != null) {
-            if (UtileriaCadena.validarCadena(preguntaCliente.getDescripcion(), 1, 300)) {
-                preguntaEntity.setDescripcion(preguntaCliente.getDescripcion());
-            }
+        if (preguntaCliente.getDescripcion() != null && UtileriaCadena.validarCadena(preguntaCliente.getDescripcion(), 1, 300)) {
+            preguntaEntity.setDescripcion(preguntaCliente.getDescripcion());
         }
 
         if (preguntaCliente.getImagen() != null) {

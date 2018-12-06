@@ -11,7 +11,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -36,6 +35,8 @@ public class PrincipalController implements Initializable {
 
     @FXML
     private TextField textFieldCodigoInvitacion;
+    
+    private static final String KEY_DATOS_INVALIDOS = "key.datosInvalidos";
 
     /**
      * Initializes the controller class.
@@ -78,20 +79,20 @@ public class PrincipalController implements Initializable {
                         if (stubPartida.unirAPartida(codigoInvitacion, jugador)) {
                             JugadorPartida jugadorPartida = JugadorPartida.obtenerInstancia();
                             jugadorPartida.setDatosPartida(codigoInvitacion, jugador);
-                            UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA", 
+                            UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.aJugarQA",
                                     "SalaEspera.fxml", textFieldCodigoInvitacion);
                         } else {
-                            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", 
+                            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
                                     "key.encabezadoError", "key.noExistePartida");
                         }
 
                     } catch (IllegalArgumentException excepcion) {
                         if (excepcion.getMessage().equals("Longitud invalida")) {
-                            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", "key.datosInvalidos", 
+                            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", KEY_DATOS_INVALIDOS,
                                     UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
                         } else {
-                            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", 
-                                    "key.datosInvalidos", excepcion.getMessage());
+                            UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
+                                    KEY_DATOS_INVALIDOS, excepcion.getMessage());
                         }
                     }
 
@@ -101,11 +102,11 @@ public class PrincipalController implements Initializable {
 
             } catch (IllegalArgumentException excepcion) {
                 if (excepcion.getMessage().equals("Longitud invalida")) {
-                    UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", "key.datosInvalidos", 
+                    UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", KEY_DATOS_INVALIDOS,
                             UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 5));
                 } else {
-                    UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema", 
-                            "key.datosInvalidos", excepcion.getMessage());
+                    UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
+                            KEY_DATOS_INVALIDOS, excepcion.getMessage());
                 }
                 textFieldCodigoInvitacion.requestFocus();
             }
@@ -119,8 +120,7 @@ public class PrincipalController implements Initializable {
      */
     private String solicitarNombreJugador() {
         String nombre = "";
-        Locale locale = Locale.getDefault();
-        ResourceBundle recurso = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recurso = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         TextInputDialog solicitudNombre = new TextInputDialog();
         solicitudNombre.setTitle(recurso.getString("key.mensajeDeSistema"));
         solicitudNombre.setHeaderText(recurso.getString("key.ingresarNombreJugador"));
@@ -138,7 +138,7 @@ public class PrincipalController implements Initializable {
      * iniciar sesión.
      */
     public void iniciarSesion() {
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.iniciarSesion", 
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.iniciarSesion",
                 "InicioSesion.fxml", textFieldCodigoInvitacion);
     }
 
@@ -146,7 +146,7 @@ public class PrincipalController implements Initializable {
      * Permite a un usuario registrarse en el sistema.
      */
     public void registrarUsuario() {
-        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.registroUsuario", 
+        UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.registroUsuario",
                 "RegistroUsuario.fxml", textFieldCodigoInvitacion);
     }
 

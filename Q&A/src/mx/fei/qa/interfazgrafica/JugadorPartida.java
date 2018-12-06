@@ -11,7 +11,7 @@ import io.socket.emitter.Emitter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +26,7 @@ import mx.fei.qa.dominio.cuestionario.PreguntaCliente;
 import mx.fei.qa.dominio.cuestionario.RespuestaCliente;
 import mx.fei.qa.partida.MensajeChat;
 import mx.fei.qa.partida.PuntajeJugador;
+import mx.fei.qa.utileria.UtileriaInterfazUsuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +45,10 @@ public class JugadorPartida {
     private short codigoInvitacion;
     private Socket socket;
     private String idSocketMonitor;
+    
+    private static final String DESCRIPCION = "descripcion";
+    private static final String IMAGEN = "imagen";
+    private static final String KEY_A_JUGAR = "key.aJugarQA";
 
     /**
      * Devuelve la instancia del JugadorPartida necesaria para que un usuario no
@@ -97,11 +102,11 @@ public class JugadorPartida {
             public void call(Object... os) {
                 JSONObject preguntaRecibida = (JSONObject) os[0];
                 PreguntaCliente pregunta = new PreguntaCliente();
-                if (preguntaRecibida.has("descripcion")) {
-                    pregunta.setDescripcion(preguntaRecibida.getString("descripcion"));
+                if (preguntaRecibida.has(DESCRIPCION)) {
+                    pregunta.setDescripcion(preguntaRecibida.getString(DESCRIPCION));
                 }
-                if (preguntaRecibida.has("imagen")) {
-                    pregunta.setImagen(DatatypeConverter.parseBase64Binary(preguntaRecibida.getString("imagen")));
+                if (preguntaRecibida.has(IMAGEN)) {
+                    pregunta.setImagen(DatatypeConverter.parseBase64Binary(preguntaRecibida.getString(IMAGEN)));
                 }
                 desplegarPregunta(pregunta);
             }
@@ -111,11 +116,11 @@ public class JugadorPartida {
                 JSONObject preguntaConRespuestasRecibida = (JSONObject) os[0];
                 JSONObject preguntaRecibida = preguntaConRespuestasRecibida.getJSONObject("pregunta");
                 PreguntaCliente pregunta = new PreguntaCliente();
-                if (preguntaRecibida.has("descripcion")) {
-                    pregunta.setDescripcion(preguntaRecibida.getString("descripcion"));
+                if (preguntaRecibida.has(DESCRIPCION)) {
+                    pregunta.setDescripcion(preguntaRecibida.getString(DESCRIPCION));
                 }
-                if (preguntaRecibida.has("imagen")) {
-                    pregunta.setImagen(DatatypeConverter.parseBase64Binary(preguntaRecibida.getString("imagen")));
+                if (preguntaRecibida.has(IMAGEN)) {
+                    pregunta.setImagen(DatatypeConverter.parseBase64Binary(preguntaRecibida.getString(IMAGEN)));
                 }
 
                 JSONArray respuestasRecibidas = preguntaConRespuestasRecibida.getJSONArray("respuestas");
@@ -127,11 +132,11 @@ public class JugadorPartida {
                     char letra = letraRecibida.charAt(0);
                     respuesta.setLetra(letra);
                     respuesta.setEsCorrecta(respuestaRecibida.getBoolean("esCorrecta"));
-                    if (respuestaRecibida.has("descripcion")) {
-                        respuesta.setDescripcion(respuestaRecibida.getString("descripcion"));
+                    if (respuestaRecibida.has(DESCRIPCION)) {
+                        respuesta.setDescripcion(respuestaRecibida.getString(DESCRIPCION));
                     }
-                    if (respuestaRecibida.has("imagen")) {
-                        respuesta.setImagen(DatatypeConverter.parseBase64Binary(respuestaRecibida.getString("imagen")));
+                    if (respuestaRecibida.has(IMAGEN)) {
+                        respuesta.setImagen(DatatypeConverter.parseBase64Binary(respuestaRecibida.getString(IMAGEN)));
                     }
                     respuestas.add(respuesta);
                 }
@@ -161,7 +166,6 @@ public class JugadorPartida {
         }).on("recibirMensajeChat", new Emitter.Listener() {
             @Override
             public void call(Object... os) {
-                System.out.println("se recibio un mensaje...");
                 JSONObject mensajeRecibido = (JSONObject) os[0];
                 MensajeChat mensaje = new MensajeChat();
                 mensaje.setNombreJugador(mensajeRecibido.getString("jugador"));
@@ -218,8 +222,7 @@ public class JugadorPartida {
      */
     private void desplegarPregunta(PreguntaCliente pregunta) {
         Platform.runLater(() -> {
-            Locale locale = Locale.getDefault();
-            ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+            ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
             FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MuestraDePregunta.fxml"), recursoIdioma);
             try {
                 Parent padre = cargadorFXML.load();
@@ -228,7 +231,7 @@ public class JugadorPartida {
 
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             } catch (IOException ex) {
@@ -247,8 +250,7 @@ public class JugadorPartida {
      */
     private void desplegarPreguntaYRespuestas(PreguntaCliente pregunta) {
         Platform.runLater(() -> {
-            Locale locale = Locale.getDefault();
-            ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+            ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
             FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MuestraPreguntaRespuestas.fxml"), recursoIdioma);
             try {
                 Parent padre = cargadorFXML.load();
@@ -257,7 +259,7 @@ public class JugadorPartida {
 
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             } catch (IOException ex) {
@@ -275,8 +277,7 @@ public class JugadorPartida {
      */
     private void desplegarMarcador(ArrayList<String> marcador) {
         Platform.runLater(() -> {
-            Locale locale = Locale.getDefault();
-            ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+            ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
             FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("MarcadorJugadores.fxml"), recursoIdioma);
             try {
                 Parent padre = cargadorFXML.load();
@@ -285,7 +286,7 @@ public class JugadorPartida {
 
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             } catch (IOException ex) {
@@ -311,8 +312,7 @@ public class JugadorPartida {
             String tercerNombre = tercerLugar.getString("nombre");
             String tercerPuntaje = tercerLugar.getString("puntaje");
 
-            Locale locale = Locale.getDefault();
-            ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+            ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
             FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("Medallero.fxml"), recursoIdioma);
             try {
                 Parent padre = cargadorFXML.load();
@@ -323,7 +323,7 @@ public class JugadorPartida {
 
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             } catch (IOException ex) {
@@ -340,8 +340,7 @@ public class JugadorPartida {
      */
     public void actualizarChat(MensajeChat mensaje) {
         chat.add(mensaje);
-        Locale locale = Locale.getDefault();
-        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("Chat.fxml"), recursoIdioma);
         try {
             ChatController pantallaChat = cargadorFXML.getController();
@@ -351,7 +350,7 @@ public class JugadorPartida {
                 Parent padre = cargadorFXML.load();
                 Stage escenario = new Stage();
                 escenario.setScene(new Scene(padre));
-                escenario.setTitle(recursoIdioma.getString("key.aJugarQA"));
+                escenario.setTitle(recursoIdioma.getString(KEY_A_JUGAR));
                 escenario.setResizable(false);
                 escenario.show();
             }
@@ -380,7 +379,7 @@ public class JugadorPartida {
      *
      * @return Chat adaptado para IU
      */
-    public ArrayList<String> getChat() {
+    public List<String> getChat() {
         ArrayList<String> chatParaIU = new ArrayList<>();
         for (int a = 0; a < chat.size(); a++) {
             MensajeChat mensaje = chat.get(a);

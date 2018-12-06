@@ -11,14 +11,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -62,6 +61,8 @@ public class PreferenciaJuegoController implements Initializable {
     private String correo;
     private String contrasenia;
     private File fotoPerfil;
+    
+    private static final String KEY_DATOS_INVALIDOS = "key.datosInvalidos";
 
     /**
      * Initializes the controller class.
@@ -74,22 +75,23 @@ public class PreferenciaJuegoController implements Initializable {
         textFieldNombreUsuario.setDisable(true);
         textFieldCorreoElectronico.setText(usuario.getCorreo());
         textFieldContrasenia.setText(usuario.getContrasenia());
-        try {
-            File imagenPerfil = new File("imagenPerfil");
-            FileOutputStream fileOutputStream = new FileOutputStream(imagenPerfil);
-            fileOutputStream.write(usuario.getFotoPerfil());
-            fileOutputStream.close();
+        if (usuario.getFotoPerfil() != null) {
+            try {
+                File imagenPerfil = new File("imagenPerfil");
+                FileOutputStream fileOutputStream = new FileOutputStream(imagenPerfil);
+                fileOutputStream.write(usuario.getFotoPerfil());
+                fileOutputStream.close();
 
-            Image imagen = new Image("file:" + imagenPerfil.getAbsolutePath());
-            imageViewFotoPerfil.setImage(imagen);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(PreferenciaJuegoController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(PreferenciaJuegoController.class.getName()).log(Level.SEVERE, null, ex);
+                Image imagen = new Image("file:" + imagenPerfil.getAbsolutePath());
+                imageViewFotoPerfil.setImage(imagen);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(PreferenciaJuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(PreferenciaJuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
-        Locale locale = Locale.getDefault();
-        ResourceBundle recursoIdioma = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        ResourceBundle recursoIdioma = UtileriaInterfazUsuario.recuperarRecursoIdiomaCliente();
         String espaniol = recursoIdioma.getString("key.espaniol");
         String ingles = recursoIdioma.getString("key.ingles");
         comboBoxIdioma.getItems().addAll(espaniol, ingles);
@@ -109,7 +111,7 @@ public class PreferenciaJuegoController implements Initializable {
     public void subirFotoPerfil() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Escoja una imagen");
-        File archivoElegido = fileChooser.showOpenDialog(imageViewFotoPerfil.getScene().getWindow());;
+        File archivoElegido = fileChooser.showOpenDialog(imageViewFotoPerfil.getScene().getWindow());
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 fotoPerfil = archivoElegido;
@@ -150,6 +152,8 @@ public class PreferenciaJuegoController implements Initializable {
                 UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard",
                         "DashboardQA.fxml", textFieldNombreUsuario);
             } catch (RemoteException | NotBoundException ex) {
+                Logger.getLogger(PreferenciaJuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
                 Logger.getLogger(PreferenciaJuegoController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -201,11 +205,11 @@ public class PreferenciaJuegoController implements Initializable {
             UtileriaCadena.validarCadena(correo, 1, 150);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueEmail",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueEmail", excepcion.getMessage());
             }
             textFieldCorreoElectronico.requestFocus();
@@ -216,11 +220,11 @@ public class PreferenciaJuegoController implements Initializable {
             UtileriaCadena.validarCadena(contrasenia, 1, 100);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueContrasenia",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueContrasenia", excepcion.getMessage());
             }
             textFieldContrasenia.requestFocus();

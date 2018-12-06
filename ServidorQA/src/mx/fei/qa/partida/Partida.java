@@ -26,8 +26,8 @@ public class Partida implements Serializable {
     private short codigoInvitacion;
     private int preguntaActual;
     private final CuestionarioCliente cuestionario;
-    private final ArrayList<PuntajeJugador> marcador;
-    private final ArrayList<MensajeChat> chat;
+    private final List<PuntajeJugador> marcador;
+    private final List<MensajeChat> chat;
     private final GraficaRespuestas graficaPreguntaActual;
 
     /**
@@ -65,7 +65,7 @@ public class Partida implements Serializable {
         for (int a = 0; a < marcador.size(); a++) {
             PuntajeJugador puntajeJugador = marcador.get(a);
             if (puntajeJugador.getJugador().getNombre().equals(jugador)) {
-                puntajeJugador.aumentarPuntaje(puntaje);
+                puntajeJugador.setPuntaje(puntaje);
             }
         }
 
@@ -94,7 +94,7 @@ public class Partida implements Serializable {
      *
      * @return Chat de la partida
      */
-    public ArrayList<MensajeChat> getChat() {
+    public List<MensajeChat> getChat() {
         return chat;
     }
 
@@ -113,6 +113,14 @@ public class Partida implements Serializable {
      */
     public short getCodigoInvitacion() {
         return codigoInvitacion;
+    }
+    
+    /**
+     * 
+     * @return Nombre del cuestionario asociado a la partida
+     */
+    public String getNombreCuestionario() {
+        return cuestionario.getNombre();
     }
 
     /**
@@ -147,7 +155,7 @@ public class Partida implements Serializable {
      *
      * @return Marcador actual de la partida
      */
-    public ArrayList<PuntajeJugador> getMarcador() {
+    public List<PuntajeJugador> getMarcador() {
         return marcador;
     }
 

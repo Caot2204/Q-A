@@ -6,7 +6,7 @@
 package mx.fei.qa.interfazgrafica;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +30,6 @@ public class MarcadorJugadoresController implements Initializable {
     private Button buttonSiguiente;
 
     private MonitorPartida monitor;
-    private ObservableList<String> marcadorParaListView;
 
     /**
      * Initializes the controller class.
@@ -51,8 +50,8 @@ public class MarcadorJugadoresController implements Initializable {
      *
      * @param marcador Marcador actual
      */
-    public void desplegarMarcador(ArrayList<String> marcador) {
-        marcadorParaListView = FXCollections.observableArrayList(marcador);
+    public void desplegarMarcador(List<String> marcador) {
+        ObservableList<String> marcadorParaListView = FXCollections.observableArrayList(marcador);
         listViewMarcador.setItems(marcadorParaListView);
     }
 

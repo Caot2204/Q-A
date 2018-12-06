@@ -54,21 +54,18 @@ public class AdministradorSesionUsuario {
         UsuarioJpaController controladorUsuario = new UsuarioJpaController(fabricaEntityManager);
         Usuario usuario = controladorUsuario.findUsuario(nombre);
 
-        if (usuario != null) {
-            if (nombre.equals(usuario.getNombre())) {
-                if (contrasenia.equals(usuario.getPassword())) {
-                    Date fechaActual = new Date();
-                    UsuarioCliente usuarioCliente = new UsuarioCliente();
-                    usuarioCliente.setNombre(usuario.getNombre());
-                    usuarioCliente.setCorreo(usuario.getCorreo());
-                    usuarioCliente.setContrasenia(usuario.getPassword());
-                    usuarioCliente.setFotoPerfil(usuario.getFotoPerfil());
+        if (usuario != null && nombre.equals(usuario.getNombre())
+                && contrasenia.equals(usuario.getPassword())) {
+            Date fechaActual = new Date();
+            UsuarioCliente usuarioCliente = new UsuarioCliente();
+            usuarioCliente.setNombre(usuario.getNombre());
+            usuarioCliente.setCorreo(usuario.getCorreo());
+            usuarioCliente.setContrasenia(usuario.getPassword());
+            usuarioCliente.setFotoPerfil(usuario.getFotoPerfil());
 
-                    SesionUsuario sesion = new SesionUsuario(fechaActual, usuarioCliente);
-                    sesionesActuales.add(sesion);
-                    autenticado = true;
-                }
-            }
+            SesionUsuario sesion = new SesionUsuario(fechaActual, usuarioCliente);
+            sesionesActuales.add(sesion);
+            autenticado = true;
         }
 
         return autenticado;

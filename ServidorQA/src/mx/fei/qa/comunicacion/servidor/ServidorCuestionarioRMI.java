@@ -138,13 +138,8 @@ public class ServidorCuestionarioRMI implements CuestionarioInterface {
      */
     @Override
     public boolean editarCuestionario(CuestionarioCliente cuestionario) throws RemoteException {
-        boolean editadoExitoso = false;
-        if (eliminarCuestionario(cuestionario.getAutor(), cuestionario.getNombre())) {
-            if (guardarCuestionario(cuestionario)) {
-                editadoExitoso = true;
-            }
-        }
-        return editadoExitoso;
+        return eliminarCuestionario(cuestionario.getAutor(), cuestionario.getNombre())
+               && guardarCuestionario(cuestionario);
     }
 
     /**

@@ -23,6 +23,9 @@ import mx.fei.qa.dominio.cuestionario.CuestionarioCliente;
  */
 public class MapeadorCuestionario {
     
+    /**
+     * Notifica que es una clase de utilidades y no puede ser instanciada.
+     */
     private MapeadorCuestionario() {
         throw new IllegalStateException("Clase de utilidades para cuestionario");
     }

@@ -27,6 +27,14 @@ import javafx.stage.Stage;
 public class UtileriaInterfazUsuario {
 
     private static ResourceBundle recurso;
+    private static final String KEY_TAMANIO_VALIDO = "key.tamanioValidoCampo";
+    
+    /**
+     * Notifica que es una clase de utilidades y no puede ser instanciada.
+     */
+    private UtileriaInterfazUsuario() {
+        throw new IllegalStateException("Clase de utilidades para IU");
+    }
 
     /**
      * Cierra la IU actual y despliega la IU especificada en los parámetros.
@@ -85,8 +93,7 @@ public class UtileriaInterfazUsuario {
      * @param nombreFXML Nombre del archivo .fxml
      */
     public static void mostrarVentanaSinCerrarActual(Class clase, String llaveTitulo, String nombreFXML) {
-        Locale locale = Locale.getDefault();
-        recurso = ResourceBundle.getBundle("mx.fei.qa.lang.lang", locale);
+        recurso = recuperarRecursoIdiomaCliente();
         String titulo = recurso.getString(llaveTitulo);
         try {
             Parent root = FXMLLoader.load(clase.getResource(nombreFXML), recurso);
@@ -114,7 +121,7 @@ public class UtileriaInterfazUsuario {
         String titulo = recurso.getString(llaveTitulo);
         String encabezado = recurso.getString(llaveEncabezado);
         String mensaje;
-        if (llaveMensaje.contains(recurso.getString("key.tamanioValidoCampo"))) {
+        if (llaveMensaje.contains(recurso.getString(KEY_TAMANIO_VALIDO))) {
             mensaje = llaveMensaje;
         } else {
             mensaje = recurso.getString(llaveMensaje);
@@ -142,7 +149,7 @@ public class UtileriaInterfazUsuario {
         String titulo = recurso.getString(llaveTitulo);
         String encabezado = recurso.getString(llaveEncabezado);
         String mensaje;
-        if (llaveMensaje.contains(recurso.getString("key.tamanioValidoCampo"))) {
+        if (llaveMensaje.contains(recurso.getString(KEY_TAMANIO_VALIDO))) {
             mensaje = llaveMensaje;
         } else {
             mensaje = recurso.getString(llaveMensaje);
@@ -165,7 +172,7 @@ public class UtileriaInterfazUsuario {
      */
     public static String generarCadenaRangoInvalidoParaMensaje(int minimo, int maximo) {
         String cadena;
-        String primerParte = recurso.getString("key.tamanioValidoCampo");
+        String primerParte = recurso.getString(KEY_TAMANIO_VALIDO);
         String segundaParte = recurso.getString("key.hasta");
         String terceraParte = recurso.getString("key.caracteres");
 

@@ -6,7 +6,7 @@
 package mx.fei.qa.interfazgrafica;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,13 +53,13 @@ public class ChatController implements Initializable {
         if (MonitorPartida.existeMonitorPartida()) {
             monitor = MonitorPartida.obtenerInstancia();
             usuarioActual = AdministradorSesionActual.obtenerAdministrador().getNombreUsuarioActual();
-            ArrayList<String> chat = monitor.getChat();
+            List<String> chat = monitor.getChat();
             chatParaListView = FXCollections.observableArrayList(chat);
             listViewChat.refresh();
         } else {
             jugador = JugadorPartida.obtenerInstancia();
             usuarioActual = jugador.getPuntajeJugador().getJugador().getNombre();
-            ArrayList<String> chat = jugador.getChat();
+            List<String> chat = jugador.getChat();
             chatParaListView = FXCollections.observableArrayList(chat);
             listViewChat.refresh();
         }

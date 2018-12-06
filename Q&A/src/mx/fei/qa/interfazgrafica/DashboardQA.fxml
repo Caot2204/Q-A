@@ -27,7 +27,7 @@
       <Button layoutX="623.0" layoutY="134.0" mnemonicParsing="false" onAction="#crearCuestionario" prefHeight="40.0" prefWidth="140.0" text="%key.crearCuestionario" />
       <Button layoutX="623.0" layoutY="191.0" mnemonicParsing="false" onAction="#jugarCuestionario" prefHeight="40.0" prefWidth="140.0" text="%key.jugar" />
       <Button layoutX="623.0" layoutY="248.0" mnemonicParsing="false" onAction="#editarCuestionario" prefHeight="40.0" prefWidth="140.0" text="%key.editarCuestionario" />
-      <Button layoutX="623.0" layoutY="304.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" text="%key.borrarCuestionario" />
+      <Button layoutX="623.0" layoutY="304.0" mnemonicParsing="false" onAction="#eliminarCuestionario" prefHeight="40.0" prefWidth="140.0" text="%key.borrarCuestionario" />
       <ImageView fitHeight="25.0" fitWidth="35.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/iconoPreguntasYRespuestas.png" />

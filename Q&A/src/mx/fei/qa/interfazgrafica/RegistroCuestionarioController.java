@@ -93,8 +93,6 @@ public class RegistroCuestionarioController implements Initializable {
     @FXML
     private RadioButton radioButtonRespuestaD;
 
-    private ObservableList<String> preguntasRegistradasParaListView;
-    private ArrayList<String> preguntasRegistradas;
     private List<RespuestaCliente> respuestas;
     private int preguntaEnEdicion;
     private AdministradorCuestionario administradorCuestionario;
@@ -104,12 +102,19 @@ public class RegistroCuestionarioController implements Initializable {
     private File archivoImagenRespuestaC;
     private File archivoImagenRespuestaD;
     private ResourceBundle recursoIdioma;
+    
+    private static final String KEY_MENSAJE_SISTEMA = "key.mensajeDeSistema";
+    private static final String KEY_DATOS_INVALIDOS = "key.datosInvalidos";
+    private static final String KEY_SELECCIONAR_ARCHIVO = "key.seleccionarOtroArchivo";
+    private static final String KEY_ARCHIVO_INVALIDO = "key.archivoInvalido";
+    private static final String LONGITUD_INVALIDA = "Longitud invalida";
+    private static final String FILE = "file:";
 
     /**
      * Inicializa el controller
      *
-     * @param url
-     * @param rb
+     * @param url Url
+     * @param rb rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -129,7 +134,7 @@ public class RegistroCuestionarioController implements Initializable {
     public void guardarCuestionario() {
         establecerDatosGeneralesCuestionario();
         if (administradorCuestionario.guardarCuestionario()) {
-            UtileriaInterfazUsuario.mostrarMensajeExito("key.mensajeDeSistema",
+            UtileriaInterfazUsuario.mostrarMensajeExito(KEY_MENSAJE_SISTEMA,
                     "key.encabezadoGuardado", "key.cuestionarioGuardado");
             UtileriaInterfazUsuario.mostrarVentana(getClass(), "key.dashboard",
                     "DashboardQA.fxml", textFieldPregunta);
@@ -171,7 +176,7 @@ public class RegistroCuestionarioController implements Initializable {
                 fileOutputStream.write(pregunta.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + archivoImagenPregunta.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoImagenPregunta.getAbsolutePath());
                 imageViewPregunta.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
@@ -208,7 +213,7 @@ public class RegistroCuestionarioController implements Initializable {
                 fileOutputStream.write(respuesta.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + archivoImagenRespuestaA.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoImagenRespuestaA.getAbsolutePath());
                 imageViewRespuestaA.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
@@ -247,7 +252,7 @@ public class RegistroCuestionarioController implements Initializable {
                 fileOutputStream.write(respuesta.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + archivoImagenRespuestaB.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoImagenRespuestaB.getAbsolutePath());
                 imageViewRespuestaB.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
@@ -286,7 +291,7 @@ public class RegistroCuestionarioController implements Initializable {
                 fileOutputStream.write(respuesta.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + archivoImagenRespuestaC.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoImagenRespuestaC.getAbsolutePath());
                 imageViewRespuestaC.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
@@ -325,7 +330,7 @@ public class RegistroCuestionarioController implements Initializable {
                 fileOutputStream.write(respuesta.getImagen());
                 fileOutputStream.close();
 
-                Image imagen = new Image("file:" + archivoImagenRespuestaD.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoImagenRespuestaD.getAbsolutePath());
                 imageViewRespuestaD.setImage(imagen);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DashboardQAController.class.getName()).log(Level.SEVERE, null, ex);
@@ -402,12 +407,12 @@ public class RegistroCuestionarioController implements Initializable {
                 administradorCuestionario.establecerDatosGenerales(nombreCuestionario);
             }
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueNombreCuestionario",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueNombreCuestionario", excepcion.getMessage());
             }
             textFieldNombreCuestionario.requestFocus();
@@ -434,12 +439,12 @@ public class RegistroCuestionarioController implements Initializable {
                     pregunta.setDescripcion(decripcion);
                 }
             } catch (IllegalArgumentException excepcion) {
-                if (excepcion.getMessage().equals("Longitud invalida")) {
-                    UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                    UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                             "key.modifiquePregunta",
                             UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 300));
                 } else {
-                    UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                    UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                             "key.modifiquePregunta", excepcion.getMessage());
                 }
                 textFieldPregunta.requestFocus();
@@ -484,12 +489,12 @@ public class RegistroCuestionarioController implements Initializable {
             respuestas.add(respuestaA);
             valida = true;
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaA",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 300));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaA", excepcion.getMessage());
             }
             textFieldRespuestaA.requestFocus();
@@ -519,12 +524,12 @@ public class RegistroCuestionarioController implements Initializable {
             respuestas.add(respuestaB);
             valida = true;
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaB",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 300));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaB", excepcion.getMessage());
             }
             textFieldRespuestaB.requestFocus();
@@ -554,12 +559,12 @@ public class RegistroCuestionarioController implements Initializable {
             respuestas.add(respuestaC);
             valida = true;
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaC",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 300));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaC", excepcion.getMessage());
             }
             textFieldRespuestaC.requestFocus();
@@ -589,12 +594,12 @@ public class RegistroCuestionarioController implements Initializable {
             respuestas.add(respuestaD);
             valida = true;
         } catch (IllegalArgumentException excepcion) {
-            if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+            if (excepcion.getMessage().equals(LONGITUD_INVALIDA)) {
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaD",
                         UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 300));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos",
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS,
                         "key.modifiqueRespuestaD", excepcion.getMessage());
             }
             textFieldRespuestaD.requestFocus();
@@ -622,11 +627,11 @@ public class RegistroCuestionarioController implements Initializable {
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 archivoImagenPregunta = archivoElegido;
-                Image imagen = new Image("file:" + archivoElegido.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoElegido.getAbsolutePath());
                 imageViewPregunta.setImage(imagen);
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
-                        "key.archivoInvalido", "key.seleccionarOtroArchivo");
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_MENSAJE_SISTEMA,
+                        KEY_ARCHIVO_INVALIDO, KEY_SELECCIONAR_ARCHIVO);
             }
         }
     }
@@ -639,11 +644,11 @@ public class RegistroCuestionarioController implements Initializable {
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 archivoImagenRespuestaA = archivoElegido;
-                Image imagen = new Image("file:" + archivoElegido.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoElegido.getAbsolutePath());
                 imageViewRespuestaA.setImage(imagen);
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
-                        "key.archivoInvalido", "key.seleccionarOtroArchivo");
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_MENSAJE_SISTEMA,
+                        KEY_ARCHIVO_INVALIDO, KEY_SELECCIONAR_ARCHIVO);
             }
         }
     }
@@ -656,11 +661,11 @@ public class RegistroCuestionarioController implements Initializable {
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 archivoImagenRespuestaB = archivoElegido;
-                Image imagen = new Image("file:" + archivoElegido.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoElegido.getAbsolutePath());
                 imageViewRespuestaB.setImage(imagen);
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
-                        "key.archivoInvalido", "key.seleccionarOtroArchivo");
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_MENSAJE_SISTEMA,
+                        KEY_ARCHIVO_INVALIDO, KEY_SELECCIONAR_ARCHIVO);
             }
         }
     }
@@ -673,11 +678,11 @@ public class RegistroCuestionarioController implements Initializable {
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 archivoImagenRespuestaC = archivoElegido;
-                Image imagen = new Image("file:" + archivoElegido.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoElegido.getAbsolutePath());
                 imageViewRespuestaC.setImage(imagen);
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
-                        "key.archivoInvalido", "key.seleccionarOtroArchivo");
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_MENSAJE_SISTEMA,
+                        KEY_ARCHIVO_INVALIDO, KEY_SELECCIONAR_ARCHIVO);
             }
         }
     }
@@ -690,11 +695,11 @@ public class RegistroCuestionarioController implements Initializable {
         if (archivoElegido != null) {
             if (archivoElegido.getName().endsWith(".jpg") || archivoElegido.getName().endsWith(".png")) {
                 archivoImagenRespuestaD = archivoElegido;
-                Image imagen = new Image("file:" + archivoElegido.getAbsolutePath());
+                Image imagen = new Image(FILE + archivoElegido.getAbsolutePath());
                 imageViewRespuestaD.setImage(imagen);
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.mensajeDeSistema",
-                        "key.archivoInvalido", "key.seleccionarOtroArchivo");
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_MENSAJE_SISTEMA,
+                        KEY_ARCHIVO_INVALIDO, KEY_SELECCIONAR_ARCHIVO);
             }
         }
     }
@@ -704,11 +709,11 @@ public class RegistroCuestionarioController implements Initializable {
      * cuestionario actualmente.
      */
     private void mostrarPreguntasRegistradas() {
-        preguntasRegistradas = new ArrayList<>();
+        ArrayList<Object> preguntasRegistradas = new ArrayList<>();
         String sinDescripcion = recursoIdioma.getString("key.sinDescripcion");
         List<PreguntaCliente> preguntasCuestionario = administradorCuestionario.getPreguntasCuestionario();
 
-        preguntasCuestionario.forEach((pregunta) -> {
+        preguntasCuestionario.forEach(pregunta -> {
             int numero = pregunta.getNumero();
             String descripcion = sinDescripcion;
             if (pregunta.getDescripcion() != null) {
@@ -718,7 +723,7 @@ public class RegistroCuestionarioController implements Initializable {
             preguntasRegistradas.add(cadenaListView);
         });
 
-        preguntasRegistradasParaListView = FXCollections.observableArrayList(preguntasRegistradas);
+        ObservableList<Object> preguntasRegistradasParaListView = FXCollections.observableArrayList(preguntasRegistradas);
         listViewPreguntasRegistradas.setItems(preguntasRegistradasParaListView);
         listViewPreguntasRegistradas.getSelectionModel().clearSelection();
     }

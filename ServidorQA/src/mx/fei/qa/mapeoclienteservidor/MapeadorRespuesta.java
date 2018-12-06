@@ -24,6 +24,13 @@ import mx.fei.qa.utileria.UtileriaCadena;
 public class MapeadorRespuesta {
 
     /**
+     * Notifica que es una clase de utilidades y no puede ser instanciada.
+     */
+    private MapeadorRespuesta() {
+        throw new IllegalStateException("Clase de utilidades para respuesta");
+    }
+    
+    /**
      * Convierte un objeto RespuestaCliente proveniente del cliente a una
      * entidad Respuesta en el servidor
      *
@@ -40,10 +47,8 @@ public class MapeadorRespuesta {
     public static Respuesta mapearRespuesta(long idCuestionario, int numeroPregunta, RespuestaCliente respuestaCliente) throws IOException {
         Respuesta respuestaEntity = new Respuesta(idCuestionario, numeroPregunta, respuestaCliente.getLetra());
 
-        if (respuestaCliente.getDescripcion() != null) {
-            if (UtileriaCadena.validarCadena(respuestaCliente.getDescripcion(), 1, 300)) {
-                respuestaEntity.setDescripcion(respuestaCliente.getDescripcion());
-            }
+        if (respuestaCliente.getDescripcion() != null && UtileriaCadena.validarCadena(respuestaCliente.getDescripcion(), 1, 300)) {
+            respuestaEntity.setDescripcion(respuestaCliente.getDescripcion());
         }
 
         if (respuestaCliente.getImagen() != null) {
@@ -70,7 +75,7 @@ public class MapeadorRespuesta {
     public static List<Respuesta> mapearRespuestasDePregunta(long idCuestionario, int numeroPregunta, List<RespuestaCliente> respuestasDePregunta) {
         List<Respuesta> respuestasEntity = new ArrayList<>();
 
-        respuestasDePregunta.forEach((respuestaCliente) -> {
+        respuestasDePregunta.forEach(respuestaCliente -> {
             try {
                 respuestasEntity.add(mapearRespuesta(idCuestionario, numeroPregunta, respuestaCliente));
             } catch (IOException ex) {
@@ -89,7 +94,7 @@ public class MapeadorRespuesta {
      * la base de datos
      * @return Lista de RespuestaCliente
      */
-    public static ArrayList<RespuestaCliente> mapearARespuestasCliente(List<Respuesta> respuestasEntity) {
+    public static List<RespuestaCliente> mapearARespuestasCliente(List<Respuesta> respuestasEntity) {
         ArrayList<RespuestaCliente> respuestasCliente = new ArrayList<>();
 
         for (Respuesta respuestaEntity : respuestasEntity) {

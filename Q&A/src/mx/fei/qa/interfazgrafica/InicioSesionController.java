@@ -5,6 +5,7 @@
  */
 package mx.fei.qa.interfazgrafica;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -37,6 +38,8 @@ public class InicioSesionController implements Initializable {
 
     private String usuario;
     private String contrasenia;
+    
+    private static final String KEY_DATOS_INVALIDOS = "key.datosInvalidos";
 
     /**
      * Initializes the controller class.
@@ -68,6 +71,8 @@ public class InicioSesionController implements Initializable {
             } catch (IllegalArgumentException excepcion) {
                 UtileriaInterfazUsuario.mostrarMensajeError("key.falloInicioSesion",
                         "key.credencialesInvalidas", "key.usuarioContraseniaIncorrectos");
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(InicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -88,9 +93,11 @@ public class InicioSesionController implements Initializable {
             UtileriaCadena.validarCadena(usuario, 1, 150);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueNombreUsuario", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS, "key.modifiqueNombreUsuario", 
+                        UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 150));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueNombreUsuario", excepcion.getMessage());
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS, 
+                        "key.modifiqueNombreUsuario", excepcion.getMessage());
             }
             textFieldNombreUsuario.requestFocus();
             textFieldNombreUsuario.requestFocus();
@@ -101,9 +108,11 @@ public class InicioSesionController implements Initializable {
             UtileriaCadena.validarCadena(contrasenia, 1, 100);
         } catch (IllegalArgumentException excepcion) {
             if (excepcion.getMessage().equals("Longitud invalida")) {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueContrasenia", UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS, "key.modifiqueContrasenia", 
+                        UtileriaInterfazUsuario.generarCadenaRangoInvalidoParaMensaje(1, 100));
             } else {
-                UtileriaInterfazUsuario.mostrarMensajeError("key.datosInvalidos", "key.modifiqueContrasenia", excepcion.getMessage());
+                UtileriaInterfazUsuario.mostrarMensajeError(KEY_DATOS_INVALIDOS, 
+                        "key.modifiqueContrasenia", excepcion.getMessage());
             }
             passwordFieldContrasenia.requestFocus();
             camposValidos = false;

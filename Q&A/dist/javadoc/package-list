@@ -1,0 +1,9 @@
+mx.fei.qa.comunicacion.interfaz
+mx.fei.qa.dominio.actores
+mx.fei.qa.dominio.cuestionario
+mx.fei.qa.interfazgrafica
+mx.fei.qa.interfazgrafica.adaptadortableview
+mx.fei.qa.manejocuestionario
+mx.fei.qa.partida
+mx.fei.qa.sesion
+mx.fei.qa.utileria
